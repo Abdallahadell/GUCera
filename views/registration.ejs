@@ -34,11 +34,22 @@
         <h1>Registration</h1>
     </div>
     <div class="cont">
-        <form method='post' action='/register'>
-            Username: <br>
-            <input type="text" id="user" name="username"> <br>
+        <form method='post' action='/registration'>
+            First Name: <br>
+            <input type="text" id="firstName" name="firstName"> <br>
+            Last Name: <br>
+            <input type="text" id="lastName" name="lastName"> <br>
             Password: <br>
-            <input type="password" id="password" name="password"> <br> <br>
+            <input type="password" id="password" name="password"> <br>
+            Email: <br>
+            <input type="text" id="email" name="email"> <br>
+            Gender: <br>
+            <input type="radio" id="male" name="gender" value="0">
+            <label for="male">Male</label><br>
+            <input type="radio" id="female" name="gender" value="1">
+            <label for="female">Female</label><br>
+            Address : <br>
+            <input type="text" id="address" name="address"> <br>
             <input type="submit" id="simple_click" class="btn btn-secondary" value="Register"> <br>
         </form>
     </div>
