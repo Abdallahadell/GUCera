@@ -32,17 +32,19 @@
         <h1>Welcome</h1>
     </div>
     <div class="cont">
-        <form method="POST">
+        <form method="POST" action="/login">
             Email:<br>
-            <input type="text" name="email">
+            <input type="text" name="id">
             <br>
             Password:<br>
             <input type="password" name="password">
-            <br><br>
-            <input type="submit" value="Login">
+            <p style="color: red;"><%=error%> </p>
+            
+            <input type="submit" value="Login">ß
         </form>
         <br>
         <a href="registration">I dont have an account</a>
     </div>
+    
 </body>
 </html>
