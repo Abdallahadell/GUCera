@@ -122,11 +122,15 @@ function runlogin(req,res){conn.connect().then(() => {
 });
 }
 
-function runProcedure(body, proc) {
+function runProcedure(body, proc, expected_outputs) {
     var inputs = []
     for (var key in body){
         input = [key, body[key], false, false];
         inputs.push(input);
+    }
+    for (var output in expected_outputs){
+        output = [output, expected_outputs[output], true, false];
+        inputs.push(output);
     }
     inputs.push(proc);
     // inputs[input][3] corresponds to a output statement
@@ -144,6 +148,7 @@ function runProcedure(body, proc) {
                 request.execute(inputs[input][0]).then(function (recordSet) {
                     console.log(recordSet + " this is the record set");
                     conn.close();
+                    return recordSet.output;
                 }).catch(function (err) {
                     console.log(err + " this is error1");
                     conn.close();
@@ -153,7 +158,7 @@ function runProcedure(body, proc) {
         }
     }).catch(function (err) {
         console.log(err + " this is error2");
-    })
+    });
 }
 
 function runStudentRegister(req) {
