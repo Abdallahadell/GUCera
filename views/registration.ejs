@@ -4,7 +4,7 @@
 <head>
     <style>
         body {
-            background-image: url("background2.jpg");
+            background-color: #008891;
             background-repeat: no-repeat;
             background-size: 100%;
             }
@@ -35,21 +35,26 @@
     </div>
     <div class="cont">
         <form method='post' action='/register'>
-            First Name: <br>
-            <input type="text" id="firstName" name="first_name" maxlength="10"> <br>
-            Last Name: <br>
-            <input type="text" id="lastName" name="last_name" maxlength="10"> <br>
+            First Name : <br>
+            <input type="text" id="firstName" name="first_name" maxlength="10" required> <br>
+            Last Name : <br>
+            <input type="text" id="lastName" name="last_name" maxlength="10" required> <br>
             Password: <br>
-            <input type="password" id="password" name="password" maxlength="10"> <br>
-            Email: <br>
-            <input type="text" id="email" name="email" maxlength="10"> <br>
-            Gender: <br>
-            <input type="radio" id="male" name="gender" value="0">
-            <label for="male">Male</label><br>
-            <input type="radio" id="female" name="gender" value="1">
-            <label for="female">Female</label><br>
+            <input type="password" id="password" name="password" maxlength="10" required> <br>
+            Email : <br>
+            <input type="text" id="email" name="email" maxlength="10" required> <br>
             Address : <br>
-            <input type="text" id="address" name="address" maxlength="10"> <br>
+            <input type="text" id="address" name="address" maxlength="10" required> <br>
+            Gender : <br>
+            <input type="radio" id="male" name="gender" value="0" required>
+            <label for="male">Male</label><br>
+            <input type="radio" id="female" name="gender" value="1" required>
+            <label for="female">Female</label><br> <br>
+            Register as :
+            <input type="radio" id="instructor" name="regType" value="false" required>
+            <label for="instructor">Instructor</label>
+            <input type="radio" id="student" name="regType" value="true" required>
+            <label for="student">Student</label> <br>
             <input type="submit" id="simple_click" class="btn btn-secondary" value="Register"> <br>
         </form>
     </div>

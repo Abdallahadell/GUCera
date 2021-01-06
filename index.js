@@ -30,7 +30,11 @@ app.get('/registration', function(req, res) {
 
 app.post('/register', function(req, res) {
     conn.connect();
-    var procedure = ["studentRegister", null, false, true];
+    procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
+    console.log(req.body.regType);
+    var procedure = [procName, null, false, true];
+    console.log(procedure);
+    delete req.body["regType"];
     runProcedure(req.body, procedure);
     res.redirect('/login');
 });
