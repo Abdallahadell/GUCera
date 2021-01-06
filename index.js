@@ -12,22 +12,63 @@ var conn = new mssql.ConnectionPool(config);
 
 app.use(express.json());
 app.use(express.urlencoded());
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','ejs');
-
+app.get('/instructor',function(req,res){
+    res.render('instructor')
+})
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
 app.get('/login', function(req, res) {
-    res.render('login');
+    res.render('login',{error:""});
 });
 
 app.get('/registration', function(req, res) {
     res.render('registration');
 });
 
+app.post('/login',function(req,res){
+    conn.connect();
+    runlogin(req,res);
+})
+function runlogin(req,res){conn.connect().then(() => {
+    var request = new mssql.Request(conn);
+    request.input('id',req.body.id)
+    request.input('password',req.body.password)
+    request.output('success',mssql.Bit)
+    request.output('type',mssql.Int)
+    request.execute("userLogin").then(function(done){
+            if(done.output.success == 1){
+                if(done.output.type == 0){
+                res.redirect('/instructor');
+                conn.close();
+                }
+                else if(done.output.type == 1){
+                    res.redirect('/Admin');
+                    conn.close();
+                }
+                else if(done.output.type==2){
+                    res.redirect('/Student');
+                    conn.close();
+                }
+            }
+            else{
+                res.render('login',{error:"The username or password is incorrect"})
+                conn.close();
+            }
+        }).catch(function (err) {
+            console.log(err + " this is error1");
+            conn.close();
+        });
+    
+}).catch(function (err) {
+    console.log(err + " this is error2");
+    conn.close();
+});
+}
 app.post('/register', function(req, res) {
     conn.connect();
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
@@ -70,7 +111,7 @@ function runProcedure(body, proc) {
         }
     }).catch(function (err) {
         console.log(err + " this is error2");
-    });
+    })
 }
 
 function runStudentRegister(req) {
