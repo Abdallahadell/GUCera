@@ -28,6 +28,22 @@ app.get('/registration', function(req, res) {
     res.render('registration');
 });
 
+app.get('/student', function(req, res) {
+    res.render('student');
+});
+
+app.get('/submitAssign', function(req, res){
+    res.render('submitAssign');
+})
+
+app.get('/addFeedback', function(req, res){
+    res.render('AddFeedback');
+});
+
+app.get('/listCert', function(req, res){
+    res.render('listCertificates');
+});
+
 app.post('/register', function(req, res) {
     conn.connect();
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
@@ -37,6 +53,30 @@ app.post('/register', function(req, res) {
     delete req.body["regType"];
     runProcedure(req.body, procedure);
     res.redirect('/login');
+});
+
+app.post('/submitAssignment', function(req, res){
+    conn.connect();
+    procName = "submitAssign";
+    var procedure = [procName, null, false, true];
+    runProcedure(req.body, procedure);
+    res.redirect('/submitAssign');
+});
+
+app.post('/feedback', function(req, res){
+    conn.connect();
+    procName = "addFeedback";
+    var procedure = [procName, null, false, true];
+    runProcedure(req.body, procedure);
+    res.redirect('/addFeedback');
+})
+
+app.post('/listcerti', function(req, res){
+    conn.connect();
+    procName = "viewCertificate";
+    var procedure = [procName, null, false, true];
+    runProcedure(req.body, procedure);
+    res.redirect('/listCert');
 });
 
 function runProcedure(body, proc) {
