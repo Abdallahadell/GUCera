@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            body{
+                background-color: #008891;
+                background-repeat: no-repeat;
+                background-size: fill;
+            }
+            h1{
+                color: black;
+                text-align: center;
+                -webkit-text-stroke: 1px black;
+            }
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Define assignment</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+    <body>
+        <form method="POST" action="/defineAssignment">
+            Course id :<br>
+            <input id="cid" type="text" value="" name="cid" required>
+            <br>
+            Number :<br>
+            <input id="number" TYPE="text" value="" name="number" required>
+            <br>
+            Full grade :<br>
+            <input id="fullGrade" TYPE="text" value="" name="fullGrade" required>
+            <br>
+            Type :<br>
+            <select id="type" name="type">
+                <option selected>------</option>
+                <option value="exam">Exam</option>
+                <option value="project">Project</option>
+                <option value="quiz">Quiz</option>
+            </select>
+            <br>
+            Weight :<br>
+            <input id="weight" TYPE="text" value="" name="weight" required>
+            <br>
+            Dead line :<br>
+            <input id="deadline" TYPE="datetime-local" textmode="Date" value="" name="deadline" required>
+            <br>
+            Content :<br>
+            <input id="content" TYPE="text" value="" name="content" maxlength="200" required>
+            <br>
+            <br>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+    </body>
+</html>
