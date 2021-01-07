@@ -31,10 +31,9 @@ app.get('/registration', function(req, res) {
 app.get('/student', function(req, res) {
     if(req.session.iid && (req.session.type == 2)){
         res.render('student');
-        }else{
+    } else{
         res.redirect('/login')
-        }
-    
+    }
 });
 
 app.get('/submitAssign', function(req, res){
@@ -84,14 +83,16 @@ app.get('/defineAssignment',function(req,res){
 }
 })
 
+app.get('/profile', async function (req, res){
+    
+    let output = await runProcedure({"id" : req.session.iid}, "viewMyProfile");
+    res.render('profile', {data : output.table[0][0]});
+})
+
 app.post('/register', function(req, res) {
-    conn.connect();
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
-    console.log(req.body.regType);
-    var procedure = [procName, null, false, true];
-    console.log(procedure);
     delete req.body["regType"];
-    runProcedure(req.body, procedure);
+    runProcedure(req.body, procName);
     res.redirect('/login');
 });
 
@@ -169,7 +170,8 @@ app.post('/viewAssign',function(req,res){
 })
 })
 
-function runlogin(req,res){conn.connect().then(() => {
+function runlogin(req,res){
+    conn.connect().then(() => {
     var request = new mssql.Request(conn);
     request.input('id',req.body.id)
     request.input('password',req.body.password)
@@ -180,8 +182,8 @@ function runlogin(req,res){conn.connect().then(() => {
                 req.session.iid = req.body.id;
                 req.session.type = done.output.type;
                 if(done.output.type == 0){
-                res.redirect('/instructor');
-                conn.close();
+                    res.redirect('/instructor');
+                    conn.close();
                 }
                 else if(done.output.type == 1){
                     res.redirect('/Admin');
@@ -207,7 +209,7 @@ function runlogin(req,res){conn.connect().then(() => {
 });
 }
 
-function runProcedure(body, proc, expected_outputs) {
+async function runProcedure(body, proc, expected_outputs) {
     var inputs = []
     for (var key in body){
         input = [key, body[key], false, false];
@@ -217,33 +219,35 @@ function runProcedure(body, proc, expected_outputs) {
         output = [output, expected_outputs[output], true, false];
         inputs.push(output);
     }
-    inputs.push(proc);
+    inputs.push([proc, null, false, true]);
     // inputs[input][3] corresponds to a output statement
     // inputs[input][4] corresponds to an execute statement
-    conn.connect().then(() => {
-        var request = new mssql.Request(conn);
-        for (input in inputs){
-            if (!inputs[input][2] && !inputs[input][3]){
-                request.input(inputs[input][0], inputs[input][1])
-            }
-            else if(inputs[input][2]){
-                request.output(inputs[input][0], inputs[input][1])
-            }
-            else{
-                request.execute(inputs[input][0]).then(function (recordSet) {
-                    console.log(recordSet + " this is the record set");
-                    conn.close();
-                    return recordSet.output;
-                }).catch(function (err) {
-                    console.log(err + " this is error1");
-                    conn.close();
-                });
-                break;
+    await conn.connect()
+    var request = new mssql.Request(conn);
+    for (input in inputs){
+        if (!inputs[input][2] && !inputs[input][3]){
+            request.input(inputs[input][0], inputs[input][1])
+        }
+        else if(inputs[input][2]){
+            request.output(inputs[input][0], inputs[input][1])
+        }
+        else{
+            try {
+                let recordSet = await request.execute(inputs[input][0]);
+                conn.close();
+                var result = {
+                    table : recordSet.recordsets ,
+                    output : recordSet.output
+                }
+                console.log(result);
+                return result;
+                
+            } catch (error) {
+               console.log(error);
+               return; 
             }
         }
-    }).catch(function (err) {
-        console.log(err + " this is error2");
-    });
+    }
 }
 
 function runStudentRegister(req) {
