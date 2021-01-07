@@ -3,7 +3,7 @@
     <head>
         <style>
             body{
-                background-color: #008891;
+                background-image:  #0a1750;
                 background-repeat: no-repeat;
                 background-size: fill;
             }
@@ -21,24 +21,18 @@
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
     <body>
-        <div class="container">
-            <h1>Instructor</h1>
-        </div>
-        <div class="cont">
+        <form method="POST" action="/addingCourse">
+            Credit hours :<br>
+            <input id="creditHours" TYPE="text" value="" name="creditHours" required>
             <br>
-            <input id="Button1" onclick="location.href='addCourse'" type="button" value="Add course" name="Button1" >
+            Name :<br>
+            <input id="Name" TYPE="text" value="" name="Name" required>
+            <br>
+            Price :<br>
+            <input id="Price" TYPE="text" value="" name="Price" required>
             <br>
             <br>
-            <input id="Button2" onclick="location.href='defineAssignment'" type="button" value="Define Assignment" name="Button1" >
-            <br>
-            <br>
-            <br>
-            <form method="POST" action="/viewAssign">
-            Course id :<br>
-            <input id="cid" TYPE="text" value="" name="cid" required>
-            <br>
-            <input id="Button2"  type="submit" value="View assignment students" name="Button2" >
-            </form>
-        </div>
+            <input type="submit" value="Submit">
+        </form>
     </body>
 </html>

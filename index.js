@@ -4,20 +4,18 @@ const app = express();
 const port = 3000;
 const path = require('path');
 const fs = require('fs');
-
+var session = require('express-session');
 var read = fs.readFileSync("config.json");
 var config = JSON.parse(read);
-
+app.use(session({ secret: 'keyboard cat',resave:false,rolling:true,saveUninitialized:false, cookie: { maxAge: 180000}}));
 var conn = new mssql.ConnectionPool(config);
-
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','ejs');
-app.get('/instructor',function(req,res){
-    res.render('instructor')
-})
+
+
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
@@ -31,20 +29,60 @@ app.get('/registration', function(req, res) {
 });
 
 app.get('/student', function(req, res) {
-    res.render('student');
+    if(req.session.iid && (req.session.type == 2)){
+        res.render('student');
+        }else{
+        res.redirect('/login')
+        }
+    
 });
 
 app.get('/submitAssign', function(req, res){
+    if(req.session.iid && (req.session.type == 2)){
     res.render('submitAssign');
+    }else{
+        res.redirect('/login')
+    }
 })
 
 app.get('/addFeedback', function(req, res){
-    res.render('AddFeedback');
+    if(req.session.iid && (req.session.type == 2)){
+        res.render('AddFeedback');
+        }else{
+            res.redirect('/login')
+        }
 });
 
 app.get('/listCert', function(req, res){
-    res.render('listCertificates');
+    if(req.session.iid && (req.session.type == 2)){
+        res.render('listCertificates');
+        }else{
+            res.redirect('/login')
+        }
 });
+app.get('/instructor',function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+        res.render('instructor')
+        }else{
+        res.redirect('/login')
+        }
+})
+
+app.get('/addCourse', function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    res.render('addingCourse')
+}else{
+    res.redirect('/login')
+}
+})
+
+app.get('/defineAssignment',function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    res.render('defineAssignment')
+    }else{
+    res.redirect('/login')
+}
+})
 
 app.post('/register', function(req, res) {
     conn.connect();
@@ -86,6 +124,51 @@ app.post('/login',function(req,res){
     runlogin(req,res);
 })
 
+app.post('/addingCourse',function(req,res){
+    conn.connect();
+    procName = "InstAddCourse"
+    var news = {instructorId : req.session.iid }
+    let enter = {
+        ...req.body,
+        ...news
+    }
+    console.log(enter)
+    var procedure = [procName, null, false, true];
+    runProcedure(enter,procedure)
+    res.redirect('/instructor')
+})
+
+app.post('/defineAssignment',function(req,res){
+    conn.connect();
+    procName = "DefineAssignmentOfCourseOfCertianType";
+    var news = {instId : req.session.iid }
+    let enter = {
+        ...req.body,
+        ...news
+    }
+    var procedure = [procName, null, false, true];
+    runProcedure(enter,procedure)
+    res.redirect('/instructor')
+})
+
+app.post('/viewAssign',function(req,res){
+    conn.connect();
+    procName="InstructorViewAssignmentsStudents";
+    conn.connect().then(()=>{
+        var request = new mssql.Request(conn);
+        request.input('cid',req.body.cid);
+        request.input('instrId',req.session.iid);
+        request.execute(procName).then(function(done){
+        console.log(done)
+        res.send(done.output.recordsets)
+        }
+    ).catch(function (err) {
+        console.log(err + " this is error1");
+        conn.close();
+    })    
+})
+})
+
 function runlogin(req,res){conn.connect().then(() => {
     var request = new mssql.Request(conn);
     request.input('id',req.body.id)
@@ -94,6 +177,8 @@ function runlogin(req,res){conn.connect().then(() => {
     request.output('type',mssql.Int)
     request.execute("userLogin").then(function(done){
             if(done.output.success == 1){
+                req.session.iid = req.body.id;
+                req.session.type = done.output.type;
                 if(done.output.type == 0){
                 res.redirect('/instructor');
                 conn.close();
