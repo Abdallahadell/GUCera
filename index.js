@@ -140,7 +140,7 @@ app.post('/addingCourse',function(req,res){
 
 app.post('/defineAssignment',function(req,res){
     conn.connect();
-    procName = "DefineAssignmentOfCourseOfCertianType"
+    procName = "DefineAssignmentOfCourseOfCertianType";
     var news = {instId : req.session.iid }
     let enter = {
         ...req.body,
@@ -149,6 +149,24 @@ app.post('/defineAssignment',function(req,res){
     var procedure = [procName, null, false, true];
     runProcedure(enter,procedure)
     res.redirect('/instructor')
+})
+
+app.post('/viewAssign',function(req,res){
+    conn.connect();
+    procName="InstructorViewAssignmentsStudents";
+    conn.connect().then(()=>{
+        var request = new mssql.Request(conn);
+        request.input('cid',req.body.cid);
+        request.input('instrId',req.session.iid);
+        request.execute(procName).then(function(done){
+        console.log(done)
+        res.send(done.output.recordsets)
+        }
+    ).catch(function (err) {
+        console.log(err + " this is error1");
+        conn.close();
+    })    
+})
 })
 
 function runlogin(req,res){conn.connect().then(() => {
