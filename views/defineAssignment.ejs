@@ -23,7 +23,14 @@
     <body>
         <form method="POST" action="/defineAssignment">
             Course id :<br>
-            <input id="cid" type="text" value="" name="cid" required>
+            <select id="cid" name="cid">
+                <option selected value='0'>Choose a course</option>
+                <%   
+                for(i = 0 ; i < result.length ; i++) {
+                %>
+                <option value = "<%= result[i].id %>" > <%=result[i].name %> </option>
+                <% } %> 
+            </select>
             <br>
             Number :<br>
             <input id="number" TYPE="text" value="" name="number" required>
@@ -33,7 +40,7 @@
             <br>
             Type :<br>
             <select id="type" name="type">
-                <option selected>------</option>
+                <option selected value="">Choose type</option>
                 <option value="exam">Exam</option>
                 <option value="project">Project</option>
                 <option value="quiz">Quiz</option>

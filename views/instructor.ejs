@@ -3,9 +3,7 @@
     <head>
         <style>
             body{
-                background-color: #008891;
-                background-repeat: no-repeat;
-                background-size: fill;
+                background-color: black;
             }
             h1{
                 color: black;
@@ -33,11 +31,15 @@
             <br>
             <br>
             <br>
-            <form method="POST" action="/viewAssign">
-            Course id :<br>
-            <input id="cid" TYPE="text" value="" name="cid" required>
+            <form method="GET" action="/viewAssigninst">
+            <input id="Button2"  type="submit" value="View assignment students">
+            </form>
             <br>
-            <input id="Button2"  type="submit" value="View assignment students" name="Button2" >
+            <form method="GET" action="/viewFeedback">
+                <input id="Button2"  type="submit" value="View student feedback">
+            </form>
+            <form method="GET" action="/IssueCertificate">
+                <input id="Button2"  type="submit" value="Issue certificate">
             </form>
         </div>
     </body>
