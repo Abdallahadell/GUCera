@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        h1 {
+            color: white;
+            text-align: center;
+            -webkit-text-stroke: 1px blue;
+        }
+        .cont {
+            position:relative;
+            top:50px;
+            bottom: 50px;
+            color: white;
+            -webkit-text-stroke: 0.5px black;
+        }
+        body{
+            background-color: #008891;
+        background-repeat: no-repeat;
+        background-size: 100%;
+        }
+    </style>
+</head>
+<body>
+    <form method = "POST" action="/studentViewAssignGrade">
+        Assign number : <br>
+        <input type="text" id="assignNumber" name="assignNumber" maxlength="1" required> <br>
+        Assign Type : <br>
+        <select name="assignType" id="assignType">
+        <option value="quiz">quiz</option>
+        <option value="Project">Project</option>
+        <option value="Exam">Exam</option> 
+    </select>
+    <br>
+        Course id : <br>
+        <input type="text" id="cid" name="cid" maxlength="4" required> <br>
+         <br>
+        <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit"> <br>
+    </form>
+</body>
+</html>
