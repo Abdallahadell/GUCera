@@ -4,17 +4,20 @@ const app = express();
 const port = 3000;
 const path = require('path');
 const fs = require('fs');
-var session = require('express-session');
-var read = fs.readFileSync("config.json");
-var config = JSON.parse(read);
+const session = require('express-session');
+
 app.use(session({ secret: 'keyboard cat',resave:false,rolling:true,saveUninitialized:false, cookie: { maxAge: 180000}}));
-var conn = new mssql.ConnectionPool(config);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.set('views', path.join(__dirname, 'views'));
+app.set('styles', path.join(__dirname, 'styles'));
 app.set('view engine','ejs');
 
+var read = fs.readFileSync("config.json");
+var config = JSON.parse(read);
+var conn = new mssql.ConnectionPool(config);
 
 app.get('/', (req, res) => {
     res.redirect('/login');
@@ -77,15 +80,26 @@ app.get('/addCourse', function(req,res){
 
 app.get('/defineAssignment',function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    res.render('defineAssignment')
-    }else{
-    res.redirect('/login')
-}
+        res.render('defineAssignment')
+    } else{
+        res.redirect('/login')
+    }
 })
 
-app.get('/profile', async function(req, res){
-    let output = await runProcedure({"id" : req.session.iid}, "viewMyProfile");
-    res.render('profile', {data : output.table[0][0]});
+
+app.get('/profile', async function (req, res){
+    if(req.session.iid) {
+        let output = await runProcedure({"id" : req.session.iid}, "viewMyProfile");
+        res.render('profile', {data : output.table[0][0]});
+    }
+})
+
+app.get('/courses', async function (req, res){
+    if(req.session.iid && req.session.type == 2) {
+        let output = await runProcedure(null, 'availableCourses', null);
+        console.log(output.table);
+        res.render('courses', {data : output.table[0]});
+    }
 })
 
 app.get('/assignContent', function(req,res){
@@ -279,7 +293,6 @@ async function runProcedure(body, proc, expected_outputs) {
                     table : recordSet.recordsets ,
                     output : recordSet.output
                 }
-                console.log(result);
                 return result;
                 
             } catch (error) {
