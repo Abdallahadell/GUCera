@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>issue certificate</title>
+    </head>
+<body>
+    <form method="POST" action="/issueCertificate">
+    Course :<select id="cid" name="cid" required>
+        <option selected value='0'>Choose a course</option>
+        <%   
+        for(i = 0 ; i < result.length ; i++) {
+        %>
+        <option value = "<%= result[i].id %>" > <%=result[i].name %> </option>
+        <% } %> 
+    </select>
+    <br>Student id :
+    <input id="sid" TYPE="text" value="" name="sid" required>
+    <br>
+    <input id="Button2"  type="submit" value="Submit">
+</form>
+</body>
+</html>
