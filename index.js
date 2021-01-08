@@ -4,17 +4,20 @@ const app = express();
 const port = 3000;
 const path = require('path');
 const fs = require('fs');
-var session = require('express-session');
-var read = fs.readFileSync("config.json");
-var config = JSON.parse(read);
+const session = require('express-session');
+
 app.use(session({ secret: 'keyboard cat',resave:false,rolling:true,saveUninitialized:false, cookie: { maxAge: 180000}}));
-var conn = new mssql.ConnectionPool(config);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.set('views', path.join(__dirname, 'views'));
+app.set('styles', path.join(__dirname, 'styles'));
 app.set('view engine','ejs');
 
+var read = fs.readFileSync("config.json");
+var config = JSON.parse(read);
+var conn = new mssql.ConnectionPool(config);
 
 app.get('/', (req, res) => {
     res.redirect('/login');
@@ -94,9 +97,54 @@ app.get('/defineAssignment',async function(req,res){
 })
 
 app.get('/profile', async function (req, res){
-    
-    let output = await runProcedure({"id" : req.session.iid}, "viewMyProfile");
-    res.render('profile', {data : output.table[0][0]});
+    if(req.session.iid) {
+        let output = await runProcedure({"id" : req.session.iid}, "viewMyProfile");
+        res.render('profile', {data : output.table[0][0]});
+    }
+})
+
+app.get('/courses', async function (req, res){
+    if(req.session.iid && req.session.type == 2) {
+        let output = await runProcedure(null, 'availableCourses', null);
+        console.log(output.table);
+        res.render('courses', {data : output.table[0]});
+    }
+})
+
+app.get('/assignContent', function(req,res){
+    if(req.session.iid && (req.session.type == 2)){
+        res.render('viewAssign')
+        }
+    else{
+        res.redirect('/login')
+    }
+});
+
+app.get('/viewGrade', function(req, res){
+    if(req.session.iid && (req.session.type == 2)){
+        res.render('viewGrades')
+        }
+    else{
+        res.redirect('/login')
+    }
+})
+
+app.post('/studentViewAssignGrade', async function(req, res){
+    let enter = req.body;
+    enter.sid = req.session.iid;
+    let output = await runProcedure(enter, "viewAssignGrades" , {"assignGrade" : mssql.Int});
+    console.log(output);
+    res.render('studentViewAssignGrade', {data : output.output});
+    console.log(output.output);
+});
+
+app.post('/viewAssignContent', async function(req, res){
+    let enter = req.body
+    enter.sid = req.session.iid
+    let output = await runProcedure(enter, "viewAssign");
+    console.log(output);
+    res.render('studentAssignments', {data : output.table[0][0]});
+    console.log(output.table[0][0]);
 })
 
 app.get('/viewAssigninst', async function(req,res){
@@ -142,27 +190,32 @@ app.post('/register', function(req, res) {
 });
 
 app.post('/submitAssignment', function(req, res){
-    conn.connect();
     procName = "submitAssign";
+    let enter = req.body
+    enter.sid = req.session.iid
     var procedure = [procName, null, false, true];
-    runProcedure(req.body, procedure);
+    runProcedure(enter, procName);
     res.redirect('/submitAssign');
 });
 
 app.post('/feedback', function(req, res){
-    conn.connect();
     procName = "addFeedback";
+    let enter = req.body
+    enter.sid = req.session.iid
     var procedure = [procName, null, false, true];
-    runProcedure(req.body, procedure);
+    runProcedure(enter, procName);
     res.redirect('/addFeedback');
 })
 
-app.post('/listcerti', function(req, res){
-    conn.connect();
+app.post('/listcerti', async function(req, res){
     procName = "viewCertificate";
+    let enter = req.body
+    enter.sid = req.session.iid
     var procedure = [procName, null, false, true];
-    runProcedure(req.body, procedure);
-    res.redirect('/listCert');
+    let output = await runProcedure(enter, "viewCertificate");
+    console.log(output);
+    res.render('studentCertificate', {data : output.table[0][0]});
+    console.log(output.table[0][0]);
 });
 
 app.post('/login',function(req,res){
@@ -312,7 +365,6 @@ async function runProcedure(body, proc, expected_outputs) {
                     table : recordSet.recordsets ,
                     output : recordSet.output
                 }
-                console.log(result);
                 return result;
                 
             } catch (error) {

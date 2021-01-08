@@ -4,17 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            background-color: #008891;
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+    </style>
+   
 </head>
 <body>
     <form method = 'POST' action="/submitAssignment">
         Assign Type : <br>
-        <input type="text" id="assignType" name="assignType" maxlength="10" required> <br>
+        <select name="assignType" id="assignType">
+        <option value="quiz">quiz</option>
+        <option value="Project">Project</option>
+        <option value="Exam">Exam</option> 
+    </select>
+    <br>
         Assign number : <br>
         <input type="text" id="assignNumber" name="assignNumber" maxlength="1" required> <br>
         Course id : <br>
         <input type="text" id="cid" name="cid" maxlength="4" required> <br>
-        Student id : <br>
-        <input type="text" id="sid" name="sid" maxlength="5" required> <br>
+         <br>
         <input type="submit" id="simple_click" class="btn btn-secondary" value="SubmitAssign"> <br>
     </form>
 </body>

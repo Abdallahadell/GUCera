@@ -1,33 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        body {
-            background-color: #008891;
-            background-repeat: no-repeat;
-            background-size: 100%;
-            }
-        h1 {
-            color: white;
-            text-align: center;
-            -webkit-text-stroke: 1px blue;
-        }
-        .cont {
-            position:relative;
-            top:50px;
-            bottom: 50px;
-            color: white;
-            -webkit-text-stroke: 0.5px black;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Registration</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
+    <title>Student Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
+
 <body>
+    <div class="topnav">
+        <a class="active" href="studnet">Home</a>
+        <a href="courses">News</a>
+        <a href="#contact">Contact</a>
+        <a href="#about">About</a>
+    </div>
     <div class="container">
         <h1>Student page</h1>
     </div>
@@ -36,13 +25,16 @@
             <form method="GET" action="/profile">
                 <input type="submit" id="simple_click" class="btn btn-secondary" value="View Profile"> <br> <br>
             </form>
-            <form method = 'POST' action="/assignContent">
+            <form method="GET" action="/courses">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="Avaliable Courses"> <br> <br>
+            </form>
+            <form method = 'GET' action="/assignContent">
                 <input type="submit" id="simple_click" class="btn btn-secondary" value="View assignments content"> <br> <br>
             </form>
             <form method = 'GET' action="/submitAssign">
                 <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit assignment"> <br> <br>
             </form>
-            <form method = 'POST' action="/viewGrade">
+            <form method = 'GET' action="/viewGrade">
                 <input type="submit" id="simple_click" class="btn btn-secondary" value="View grades"> <br> <br>
             </form>
             <form method = 'GET' action="/addFeedback">

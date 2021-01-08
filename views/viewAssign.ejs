@@ -10,16 +10,25 @@
             background-repeat: no-repeat;
             background-size: 100%;
         }
+        h1 {
+            color: white;
+            text-align: center;
+            -webkit-text-stroke: 1px black;
+        }
+        .cont {
+            position:relative;
+            left:600px;
+            top:50px;
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <form method = 'POST' action="/feedback">
-        Comment : <br>
-        <input type="text" id="comment" name="comment" maxlength="100" required> <br>
+    <form method = 'POST' action="/viewAssignContent">
         Course id : <br>
-        <input type="text" id="cid" name="cid" maxlength="4" required> <br>
-        <br>
+        <input type="text" id="courseId" name="courseId" maxlength="4" required> <br>
         <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit"> <br>
     </form>
+    </div>
 </body>
 </html>
