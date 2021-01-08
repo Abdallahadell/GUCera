@@ -99,7 +99,7 @@ app.get('/profile', async function (req, res){
     res.render('profile', {data : output.table[0][0]});
 })
 
-app.get('/viewAssign', async function(req,res){
+app.get('/viewAssigninst', async function(req,res){
     conn.connect();
     procName="InstructorViewAcceptedCoursesByAdmin";
     var news = {instrId : req.session.iid }
@@ -109,7 +109,7 @@ app.get('/viewAssign', async function(req,res){
     }
     console.log(enter)
     result1 = await runProcedure(enter,procName)
-    res.render('viewAssign',{result:"",result1:result1.table[0]})
+    res.render('viewAssigninst',{result:"",result1:result1.table[0]})
 })
 
 app.get('/IssueCertificate',async function(req,res){
@@ -193,7 +193,7 @@ app.post('/defineAssignment',function(req,res){
     res.redirect('/instructor')
 })
 
-app.post('/viewAssign',async function(req,res){
+app.post('/viewAssigninst',async function(req,res){
     conn.connect();
     procName1="InstructorViewAcceptedCoursesByAdmin";
     result1 = await runProcedure({instrId : req.session.iid},procName1)
@@ -204,7 +204,7 @@ app.post('/viewAssign',async function(req,res){
         ...news
     }
     result = await runProcedure(enter,procName)
-    res.render('viewAssign',{result : result.table[0],result1:result1.table[0]})
+    res.render('viewAssigninst',{result : result.table[0],result1:result1.table[0]})
 })
 
 app.post("/viewFeedback", async function(req,res){
