@@ -1,0 +1,64 @@
+body {
+    background-color: #008891;
+    font-size: .80em;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    color: #e7e7de;
+}
+
+.btn {
+    color: #00587a;
+    background-color: #e7e7de;
+}
+
+.container {
+    padding-top: 10px;
+    text-align: center;
+}
+
+.cont {
+    margin: 5em;
+    text-align: center;
+}
+
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #e7e7de;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+    float: left;
+    color: #00587a;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+    .topnav a:hover {
+    background-color: #008891;
+    color: #e7e7de;
+}
+
+/* Add a color to the active/current link */
+    .topnav a.active {
+    background-color: #6f9eaf;
+    color: #e7e7de;
+    pointer-events: none;
+}
+
+.table {
+    color: #e7e7de;
+    font-size: large;
+    padding-top: 100px;
+    text-align: center;
+    margin:0 auto;
+}
+
+.table table {
+    margin-left:auto; 
+    margin-right:auto;
+    text-align: center;
+}
