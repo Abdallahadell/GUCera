@@ -3,34 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body {
-            background-color: #008891;
-            background-repeat: no-repeat;
-            background-size: 100%;
-        }
-        h1 {
-            color: white;
-            text-align: center;
-            -webkit-text-stroke: 1px black;
-        }
-        .cont {
-            position:relative;
-            left:600px;
-            top:50px;
-            color: white;
-        }
-    </style>
+    <title>Grades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="topnav">
+    <a href="student">Home</a>
+    <a href="courses">Courses</a>
+    <a href="profile">My Profile</a>
+    <a href="#about">About</a>
+</div>
     <div class="container">
         <h1>Your assignments grades</h1>
     </div>
+    <div class = "table">
     <table cellspacing=10px>
         <tr>
           <td>Assignment Grade : </td>
           <td><%=data.assignGrade%></td>
-        </tr>  
+        </tr> 
+    </div> 
 </body>
 </html>

@@ -3,28 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        h1 {
-            color: white;
-            text-align: center;
-            -webkit-text-stroke: 1px blue;
-        }
-        .cont {
-            position:relative;
-            top:50px;
-            bottom: 50px;
-            color: white;
-            -webkit-text-stroke: 0.5px black;
-        }
-        body{
-            background-color: #008891;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        }
-    </style>
+    <title>View Grades</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+<div class="topnav">
+    <a href="student">Home</a>
+    <a href="courses">Courses</a>
+    <a href="profile">My Profile</a>
+    <a href="#about">About</a>
+</div>
     <form method = "POST" action="/studentViewAssignGrade">
         Assign number : <br>
         <input type="text" id="assignNumber" name="assignNumber" maxlength="1" required> <br>

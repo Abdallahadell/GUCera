@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -8,47 +8,45 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
-</head>
-
-<body>
-    <div class="topnav">
-        <a href="student">Home</a>
-        <a href="courses">News</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
-    </div>
-    <div class="container">
-        <h1>Your Profile</h1>
-    </div>
-    <div class="table">
-        <table cellspacing=10px>
-            <tr>
-              <td>first name </td>
-              <td><%=data.firstName%></td>
-            </tr>
-            <tr>
-              <td>last name </td>
-              <td><%=data.lastName%></td>
-            </tr>
-            <tr>
-              <td>gender </td>
-                <% if(data.gender.readInt8()==0){data.gender="Male"} else {data.gender="Female"} %>
-              <td><%=data.gender%></td>
-            </tr>
-            <tr>
-              <td>email </td>
-              <td><%=data.email%></td>
-            </tr>
-            <tr>
-              <td>address </td>
-              <td><%=data.address%></td>
-            </tr>
-            <tr>
-              <td>gpa </td>
-              <td><%=data.gpa%></td>
-            </tr>
-          </table>
-    </div>
-    
-</body>
-</html>
+  </head>
+  <body>
+      <div class="topnav">
+          <a href="student">Home</a>
+          <a href="courses">Courses</a>
+          <a href="profile" class = "active">My Profile</a>
+          <a href="#about">About</a>
+      </div>
+      <div class="container">
+          <h1>Your Profile</h1>
+      </div>
+      <div class="table">
+          <table cellspacing=10px>
+              <tr>
+                <td>first name </td>
+                <td><%=data.firstName%></td>
+              </tr>
+              <tr>
+                <td>last name </td>
+                <td><%=data.lastName%></td>
+              </tr>
+              <tr>
+                <td>gender </td>
+                  <% if(data.gender.readInt8()==0){data.gender="Male"} else {data.gender="Female"} %>
+                <td><%=data.gender%></td>
+              </tr>
+              <tr>
+                <td>email </td>
+                <td><%=data.email%></td>
+              </tr>
+              <tr>
+                <td>address </td>
+                <td><%=data.address%></td>
+              </tr>
+              <tr>
+                <td>gpa </td>
+                <td><%=data.gpa%></td>
+              </tr>
+            </table>
+      </div>
+    </body>
+  </html>
