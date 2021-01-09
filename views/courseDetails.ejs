@@ -18,21 +18,25 @@
         <a href="#about">About</a>
     </div>
     <div class="container">
-        <h1>All Avaliable Courses</h1>
+        <h1>Course Details</h1>
     </div>
-    <div class="table">
+    <div class="table" style="padding-top: 20px;">
         <table cellspacing=10px>
+          <% for(key in data) { %>
             <tr>
-              <td>Name</td>
+              <td><%=key%></td>
+              <td><%=data[key]%></td>
             </tr>
-            <tr>
-              <%for(var index = 0; index < data.length; index++ ) { %>
-                <tr>
-                  <td><a href="courseDetails/<%= data[index].name %>"><%= data[index].name %></a></td>
-                </tr>
-              <% } %>
-            </tr>
-          </table>
+          <%}%>
+        </table>
+        <form action="/enroll/<%= data["Course ID"] %> " method="POST">
+          <select name="instr" id="instr">
+            <% for( let index = 0; index < instructor.length; index++ ) { %>
+              <option value="<%=instructor[index].insid%>"><%=instructor[index].name%></option>
+            <% } %>
+          </select> <br><br>
+          <input type="submit" class="btn btn-secondary">
+        </form>
     </div>
 </body>
 </html>
