@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>issue certificate</title>
+        <style>
+            .new{
+                background-color: #008891;
+                font-size: .80em;
+                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+                color: #e7e7de;
+            }
+            .topnav a {
+                float: left;
+                color: #00587a;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .topnav {
+                background-color: grey;
+                overflow: hidden;
+            }.topnav a.active {
+                background-color: #6f9eaf;
+                color: #e7e7de;
+                pointer-events: none;
+            }
+            .topnav a:hover {
+                background-color: #008891;
+                color: #e7e7de;
+            }
+            .dumbo{
+                margin-top: 5%;
+                text-align: center;
+                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+                color: #e7e7de;
+            }
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Instructor</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+<body class="new">
+    <div class="topnav">
+        <a href="/instructor">Home</a>
+        <a href="addcourse">Add course</a>
+        <a href="defineAssignment">Add assesment</a>
+        <a href="/updateContent">Content</a>
+        <a href="/updateCourseDescription">Course description</a>
+        <a href="/viewFeedback">View student feedback</a> 
+        <a href="/viewAssigninst">View assignment students</a>
+        <a href="/IssueCertificate">Issue certificate</a>
+        <a class="active" href="/instructorProfile">Profile</a>
+        <a href="/logout">Log out</a>
+    </div>
+    <div class="dumbo">
+        <label>First name :</label>
+        <span><%=result.firstName  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Last name :</label>
+        <span><%=result.lastName  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Gender :</label>
+        <span><%=result.gender  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Email :</label>
+        <span><%=result.email  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Address :</label>
+        <span><%=result.address  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Rating :</label>
+        <span><%=result.rating  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Email :</label>
+        <span><%=result.email  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Mobile number :</label>
+        <span><%=result.mobileNumber  %> </span>
+        <br style="-webkit-user-select: auto;">
+    </div>
+
+</body>
+</html>
