@@ -29,6 +29,12 @@
                 background-color: #008891;
                 color: #e7e7de;
             }
+            .dumbo{
+                margin-top: 5%;
+                text-align: center;
+                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+                color: #e7e7de;
+            }
         </style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,23 +50,36 @@
         <a href="defineAssignment">Add assesment</a>
         <a href="/viewFeedback">View student feedback</a> 
         <a href="/viewAssigninst">View assignment students</a>
-        <a class="active" href="/IssueCertificate">Issue certificate</a>
-        <a href="/instructorProfile">Profile</a>
+        <a href="/IssueCertificate">Issue certificate</a>
+        <a class="active" href="/instructorProfile">Profile</a>
         <a href="/logout">Log out</a>
     </div>
-    <form method="POST" action="/issueCertificate">
-    Course :<select id="cid" name="cid" required>
-        <option selected value='0'>Choose a course</option>
-        <%   
-        for(i = 0 ; i < result.length ; i++) {
-        %>
-        <option value = "<%= result[i].id %>" > <%=result[i].name %> </option>
-        <% } %> 
-    </select>
-    <br>Student id :
-    <input id="sid" TYPE="text" value="" name="sid" required>
-    <br>
-    <input id="Button2"  type="submit" value="Submit">
-</form>
+    <div class="dumbo">
+        <label>First name :</label>
+        <span><%=result.firstName  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Last name :</label>
+        <span><%=result.lastName  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Gender :</label>
+        <span><%=result.gender  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Email :</label>
+        <span><%=result.email  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Address :</label>
+        <span><%=result.address  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Rating :</label>
+        <span><%=result.rating  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Email :</label>
+        <span><%=result.email  %> </span>
+        <br style="-webkit-user-select: auto;">
+        <label>Mobile number :</label>
+        <span><%=result.mobileNumber  %> </span>
+        <br style="-webkit-user-select: auto;">
+    </div>
+
 </body>
 </html>

@@ -2,13 +2,44 @@
 <html lang="en">
     <head>
         <style>
-            body{
-                background-color: black;
+            .container,.new{
+                background-color: #008891;
+                font-size: .80em;
+                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+                color: #e7e7de;
             }
             h1{
                 color: black;
                 text-align: center;
                 -webkit-text-stroke: 1px black;
+            }
+
+            .cont{
+                text-align: center;
+            }
+            .topnav a {
+                float: left;
+                color: #00587a;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .topnav a.submit{
+            background-color: grey;
+            overflow: hidden;    
+            }
+            .topnav {
+                background-color: grey;
+                overflow: hidden;
+            }.topnav a.active {
+                background-color: #6f9eaf;
+                color: #e7e7de;
+                pointer-events: none;
+            }
+            .topnav a:hover {
+                background-color: #008891;
+                color: #e7e7de;
             }
         </style>
         <meta charset="UTF-8">
@@ -18,29 +49,19 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
-    <body>
+    <body class = "new">
+        <div class="topnav">
+            <a class="active" href="/instructor">Home</a>
+            <a href="addcourse">Add course</a>
+            <a href="defineAssignment">Add assesment</a>
+            <a href="/viewFeedback">View student feedback</a> 
+            <a href="/viewAssigninst">View assignment students</a>
+            <a href="/IssueCertificate">Issue certificate</a>
+            <a href="/instructorProfile">Profile</a>
+            <a href="/logout">Log out</a>
+        </div>
         <div class="container">
             <h1>Instructor</h1>
-        </div>
-        <div class="cont">
-            <br>
-            <input id="Button1" onclick="location.href='addCourse'" type="button" value="Add course" name="Button1" >
-            <br>
-            <br>
-            <input id="Button2" onclick="location.href='defineAssignment'" type="button" value="Define Assignment" name="Button1" >
-            <br>
-            <br>
-            <br>
-            <form method="GET" action="/viewAssigninst">
-            <input id="Button2"  type="submit" value="View assignment students">
-            </form>
-            <br>
-            <form method="GET" action="/viewFeedback">
-                <input id="Button2"  type="submit" value="View student feedback">
-            </form>
-            <form method="GET" action="/IssueCertificate">
-                <input id="Button2"  type="submit" value="Issue certificate">
-            </form>
         </div>
     </body>
 </html>
