@@ -3,16 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Add feedback</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <div class="topnav">
+        <a href="student">Home</a>
+        <a href="courses">Courses</a>
+        <a href="profile">My Profile</a>
+        <a href="#about">About</a>
+    </div>
     <form method = 'POST' action="/feedback">
         Comment : <br>
         <input type="text" id="comment" name="comment" maxlength="100" required> <br>
         Course id : <br>
         <input type="text" id="cid" name="cid" maxlength="4" required> <br>
-        Student id : <br>
-        <input type="text" id="sid" name="sid" maxlength="5" required> <br>
+        <br>
         <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit"> <br>
     </form>
 </body>

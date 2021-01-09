@@ -2,15 +2,40 @@
 <html lang="en">
     <head>
         <style>
-            body{
+            .new{
                 background-color: #008891;
-                background-repeat: no-repeat;
-                background-size: fill;
+                font-size: .80em;
+                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+                color: #e7e7de;
+                text-align: center;
+            }
+            .post{
+                padding-top: 5%;
             }
             h1{
                 color: black;
                 text-align: center;
                 -webkit-text-stroke: 1px black;
+            }
+            .topnav a {
+                float: left;
+                color: #00587a;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .topnav {
+                background-color: grey;
+                overflow: hidden;
+            }.topnav a.active {
+                background-color: #6f9eaf;
+                color: #e7e7de;
+                pointer-events: none;
+            }
+            .topnav a:hover {
+                background-color: #008891;
+                color: #e7e7de;
             }
         </style>
         <meta charset="UTF-8">
@@ -19,11 +44,32 @@
         <title>Define assignment</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/style.css">
     </head>
-    <body>
+    <body class= "new">
+        <div class="topnav">
+            <a href="/instructor">Home</a>
+            <a href="addcourse">Add course</a>
+            <a class="active" href="defineAssignment">Add assesment</a>
+            <a href="/updateContent">Content</a>
+            <a href="/updateCourseDescription">Course description</a>
+            <a href="/viewFeedback">View student feedback</a> 
+            <a href="/viewAssigninst">View assignment students</a>
+            <a href="/IssueCertificate">Issue certificate</a>
+            <a href="/instructorProfile">Profile</a>
+            <a href="/logout">Log out</a>
+        </div>
+        <div class="post">
         <form method="POST" action="/defineAssignment">
             Course id :<br>
-            <input id="cid" type="text" value="" name="cid" required>
+            <select id="cid" name="cid">
+                <option selected value='0'>Choose a course</option>
+                <%   
+                for(i = 0 ; i < result.length ; i++) {
+                %>
+                <option value = "<%= result[i].id %>" > <%=result[i].name %> </option>
+                <% } %> 
+            </select>
             <br>
             Number :<br>
             <input id="number" TYPE="text" value="" name="number" required>
@@ -33,7 +79,7 @@
             <br>
             Type :<br>
             <select id="type" name="type">
-                <option selected>------</option>
+                <option selected value="">Choose type</option>
                 <option value="exam">Exam</option>
                 <option value="project">Project</option>
                 <option value="quiz">Quiz</option>
@@ -49,8 +95,8 @@
             <input id="content" TYPE="text" value="" name="content" maxlength="200" required>
             <br>
             <br>
-            <br>
             <input type="submit" value="Submit">
         </form>
+    </div>
     </body>
 </html>

@@ -1,33 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <title>Update content</title>
         <style>
-            .container,.new{
+            .new{
+                text-align: center;
                 background-color: #008891;
                 font-size: .80em;
                 font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
                 color: #e7e7de;
             }
-            h1{
-                color: black;
-                text-align: center;
-                -webkit-text-stroke: 1px black;
-            }
-
-            .cont{
-                text-align: center;
-            }
-            .topnav a {
-                float: left;
-                color: #00587a;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: 17px;
-            }
-            .topnav a.submit{
-            background-color: grey;
-            overflow: hidden;    
+            .zoo{
+                margin-top: 5%;
             }
             .topnav {
                 background-color: grey;
@@ -41,6 +25,14 @@
                 background-color: #008891;
                 color: #e7e7de;
             }
+            .topnav a {
+                float: left;
+                color: #00587a;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
         </style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,14 +40,13 @@
         <title>Instructor</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="/css/style.css">
     </head>
-    <body class = "new">
+    <body class="new">
         <div class="topnav">
-            <a class="active" href="/instructor">Home</a>
+            <a href="/instructor">Home</a>
             <a href="addcourse">Add course</a>
             <a href="defineAssignment">Add assesment</a>
-            <a href="/updateContent">Content</a>
+            <a class="active" href="/updateContent">Content</a>
             <a href="/updateCourseDescription">Course description</a>
             <a href="/viewFeedback">View student feedback</a> 
             <a href="/viewAssigninst">View assignment students</a>
@@ -63,8 +54,25 @@
             <a href="/instructorProfile">Profile</a>
             <a href="/logout">Log out</a>
         </div>
-        <div class="container">
-            <h1>Instructor</h1>
+        <div class="zoo">
+            <form method="POST" action="/updateContent">
+            Course :<select id="courseId" name="courseId" required>
+                <option selected value='0'>Choose a course</option>
+                <%   
+                for(i = 0 ; i < result1.length ; i++) {
+                %>
+                <option value = "<%= result1[i].id %>" > <%=result1[i].name %> </option>
+                <% } %> 
+            </select>
+            <br>
+            <br>
+            <label>  Content :</label> 
+            <input id="content" name="content" type="text" value="" maxlength="200">
+            <br>
+            <br>
+            <input id="Button2"  type="submit" value="Update">
+            </form>
         </div>
     </body>
+
 </html>
