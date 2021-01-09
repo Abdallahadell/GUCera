@@ -19,6 +19,9 @@
                 text-align: center;
                 -webkit-text-stroke: 1px black;
             }
+            .zoo{
+                text-align: center;
+            }
             .topnav a {
                 float: left;
                 color: #00587a;
@@ -52,11 +55,12 @@
             <a href="/instructorProfile">Profile</a>
             <a href="/logout">Log out</a>
         </div>
+        <div class="zoo">
         <form method="POST" action="/addingCourse">
             Credit hours :<br>
             <input id="creditHours" TYPE="text" value="" name="creditHours" required>
             <br>
-            Name :<br>
+    Name :<br>
             <input id="Name" TYPE="text" value="" name="Name" required>
             <br>
             Price :<br>
@@ -65,5 +69,6 @@
             <br>
             <input type="submit" value="Submit">
         </form>
+        </div>
     </body>
 </html>

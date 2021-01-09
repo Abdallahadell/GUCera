@@ -11,7 +11,13 @@
             font-size: .80em;
             font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
             color: #e7e7de;
+            text-align: center;
         }
+        .table-data{ 
+            position: relative; 
+            left:45%; 
+            top:100px; 
+        } 
         .topnav a {
                 float: left;
                 color: #00587a;
@@ -51,7 +57,7 @@
                 <a href="/instructorProfile">Profile</a>
                 <a href="/logout">Log out</a>
             </div>
-            <div class="zoo">
+            <div>
             <form method="POST" action="/viewFeedback">
                 Course :<select id="cid" name="cid">
                     <option selected value='0'>Choose a course</option>
@@ -64,7 +70,8 @@
                 <br>
                 <input id="Button2"  type="submit" value="View feedback">
                 </form>
-                    <table border ="3">
+                <div class="table-data">
+                    <table class="zoo" border ="3">
                         <tr>
                             <th>Number</th>
                             <th>Comment</th>
@@ -86,6 +93,7 @@
                             </tr>
                         <% } %>
                     </table>
+                    </div>
         </div>
         </body>
 </html>

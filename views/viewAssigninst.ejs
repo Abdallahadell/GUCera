@@ -17,6 +17,11 @@
                 text-decoration: none;
                 font-size: 17px;
             }
+            .table-data{ 
+            position: relative; 
+            left:30%; 
+            top:100px; 
+            } 
             .topnav {
                 background-color: grey;
                 overflow: hidden;
@@ -48,6 +53,7 @@
                 <a href="/instructorProfile">Profile</a>
                 <a href="/logout">Log out</a>
             </div>
+            <div class="table-data">
             <form method="POST" action="/viewAssigninst">
                 Course :<select id="cid" name="cid" required>
                     <option selected value='0'>Choose a course</option>
@@ -60,7 +66,7 @@
                 <br>
                 <input id="Button2"  type="submit" value="View assignment students">
                 </form>
-            <div class="table-data">
+            
                     <table border = "3">
                         <tr>
                             <th>Student id</th>
