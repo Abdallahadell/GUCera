@@ -10,6 +10,10 @@
                 color: #e7e7de;
                 text-align: center;
             }
+            .post{
+                text-align: center;
+                padding-top: 5%;
+            }
             .topnav a {
                 float: left;
                 color: #00587a;
@@ -43,12 +47,15 @@
         <a href="/instructor">Home</a>
         <a href="addcourse">Add course</a>
         <a href="defineAssignment">Add assesment</a>
+        <a href="/updateContent">Content</a>
+        <a href="/updateCourseDescription">Course description</a>
         <a href="/viewFeedback">View student feedback</a> 
         <a href="/viewAssigninst">View assignment students</a>
         <a class="active" href="/IssueCertificate">Issue certificate</a>
         <a href="/instructorProfile">Profile</a>
         <a href="/logout">Log out</a>
     </div>
+    <div class="post">
     <form method="POST" action="/issueCertificate">
     Course :<select id="cid" name="cid" required>
         <option selected value='0'>Choose a course</option>
@@ -64,6 +71,7 @@
     <br>
     <br>
     <input id="Button2"  type="submit" value="Submit">
-</form>
+    </form>
+    </div>
 </body>
 </html>
