@@ -109,11 +109,27 @@ app.get('/profile', async function (req, res){
 app.get('/courses', async function (req, res){
     if(req.session.iid && req.session.type == 2) {
         let output = await runProcedure(null, 'availableCourses', null);
-        console.log(output.table);
         res.render('courses', {data : output.table[0]});
     }
 })
 
+app.get('/courseDetails/:cname', async function (req, res){
+    if(req.session.iid) {
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            request.input('cname', req.params.cname);
+            var queryResult = await request.query("select id from Course where name = @cname");
+            request.input('cid', queryResult.recordset[0].id);
+            var instrQuery = await request.query("select i.insid, u.firstName + ' ' + u.lastName as 'name' from InstructorTeachCourse i inner join Users u on i.insid = u.id where cid = @cid");
+        } catch(err) {
+            console.log(err);
+        }
+        conn.close();
+        let output = await runProcedure(queryResult.recordset[0], 'courseInformation', null);
+        res.render('courseDetails', {data : output.table[0][0], instructor : instrQuery.recordset});
+    }
+  
 app.get('/assignContent', function(req,res){
     if(req.session.iid && (req.session.type == 2)){
         res.render('viewAssign')
@@ -242,6 +258,13 @@ app.post('/register', function(req, res) {
     res.redirect('/login');
 });
 
+app.post('/enroll/:cid', function(req, res) {
+    req.body.sid = req.session.iid;
+    req.body.cid = req.params.cid
+    runProcedure(req.body, 'enrollInCourse');
+    res.redirect("/courses");
+})
+
 app.post('/submitAssignment', function(req, res){
     procName = "submitAssign";
     let enter = req.body
@@ -320,6 +343,17 @@ app.post('/viewAssigninst',async function(req,res){
     procName1="InstructorViewAcceptedCoursesByAdmin";
     result1 = await runProcedure({instrId : req.session.iid},procName1)
     procName="InstructorViewAssignmentsStudents";
+    conn.connect().then(()=>{
+        var request = new mssql.Request(conn);
+        request.input('cid',req.body.cid);
+        request.input('instrId',req.session.iid);
+        request.execute(procName).then(function(done){
+        res.send(done.output.recordsets)
+        }
+    ).catch(function (err) {
+        console.log(err + " this is error1");
+        conn.close();
+    })    
     var news = {instrId : req.session.iid }
     let enter = {
         ...req.body,
@@ -366,6 +400,7 @@ app.post("/issueCertificate",function(req,res){
     res.redirect('/login')
     }
 })
+  
 app.post("/gradeAssignment",function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;
@@ -511,7 +546,6 @@ function runStudentRegister(req) {
         request.input('gender', req.body.gender);
         request.input('address', req.body.address);
         request.execute("studentRegister").then(function (recordSet) {
-            console.log(recordSet + " this is the record set");
             conn.close();
         }).catch(function (err) {
             console.log(err + " this is error1");

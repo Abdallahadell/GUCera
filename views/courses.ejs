@@ -27,12 +27,13 @@
               <td>Name</td>
             </tr>
             <tr>
-              <% for( let index = 0; index < data.length; index++ ) { %>
-                <tr><td><%= data[index].name %> </td></tr>
+              <%for(var index = 0; index < data.length; index++ ) { %>
+                <tr>
+                  <td><a href="courseDetails/<%= data[index].name %>"><%= data[index].name %></a></td>
+                </tr>
               <% } %>
             </tr>
           </table>
     </div>
-    
 </body>
 </html>
