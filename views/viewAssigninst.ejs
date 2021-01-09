@@ -17,10 +17,15 @@
                 text-decoration: none;
                 font-size: 17px;
             }
+            .post{
+                padding-top: 5%;
+                text-align: center;
+                text-decoration: black;
+            }
             .table-data{ 
-            position: relative; 
-            left:30%; 
-            top:100px; 
+            position: relative;
+            left: 35% 
+
             } 
             .topnav {
                 background-color: grey;
@@ -47,13 +52,15 @@
                 <a href="/instructor">Home</a>
                 <a href="addcourse">Add course</a>
                 <a href="defineAssignment">Add assesment</a>
+                <a href="/updateContent">Content</a>
+                <a href="/updateCourseDescription">Course description</a>
                 <a href="/viewFeedback">View student feedback</a> 
                 <a class="active" href="/viewAssigninst">View assignment students</a>
                 <a href="/IssueCertificate">Issue certificate</a>
                 <a href="/instructorProfile">Profile</a>
                 <a href="/logout">Log out</a>
             </div>
-            <div class="table-data">
+            <div class="post">
             <form method="POST" action="/viewAssigninst">
                 Course :<select id="cid" name="cid" required>
                     <option selected value='0'>Choose a course</option>
@@ -64,9 +71,12 @@
                     <% } %> 
                 </select>
                 <br>
+                <br>
                 <input id="Button2"  type="submit" value="View assignment students">
                 </form>
-            
+            </div>
+            <br>
+            <div class="table-data">
                     <table border = "3">
                         <tr>
                             <th>Student id</th>
@@ -93,7 +103,7 @@
                                 <input type="hidden" name="cid" value = "<%=result[i].cid%>">
                                 <input type="hidden" name="assignmentNumber" value = "<%=result[i].assignmentNumber%>">
                                 <input type="hidden" name="type" value = "<%=result[i].assignmenttype%>">
-                                <input type="number" name="grade" value ="">
+                                <input type="number" min="0" max="100" required name="grade" value ="" >
                                 <input type="submit" value="Grade">
                             </form>
                             </td>

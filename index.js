@@ -209,6 +209,32 @@ app.get('/viewFeedback', async function(req,res){
     }
 })
 
+app.get('/updateContent',async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+        req.session.touch;
+        conn.connect();
+        procName="InstructorViewAcceptedCoursesByAdmin";
+        var news = {instrId : req.session.iid }
+        result1 = await runProcedure(news,procName)
+        res.render('updateContent',{result1:result1.table[0]})
+        }else{
+        res.redirect('/login')
+        }
+})
+
+app.get('/updateCourseDescription',async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+        req.session.touch;
+        conn.connect();
+        procName="InstructorViewAcceptedCoursesByAdmin";
+        var news = {instrId : req.session.iid }
+        result1 = await runProcedure(news,procName)
+        res.render('courseDescription',{result1:result1.table[0]})
+        }else{
+        res.redirect('/login')
+        }
+})
+
 app.post('/register', function(req, res) {
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
     delete req.body["regType"];
@@ -226,7 +252,7 @@ app.post('/submitAssignment', function(req, res){
 });
 
 app.post('/feedback', function(req, res){
-    if(req.session.iid && (req.session.type == 0)){
+    if(req.session.iid && (req.session.type == 2)){
     req.session.touch;
     procName = "addFeedback";
     let enter = req.body
@@ -356,6 +382,40 @@ app.post("/gradeAssignment",function(req,res){
     }
 })
 
+app.post("/updateContent",function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
+    procName = "UpdateCourseContent"
+    var news = {instrId : req.session.iid }
+    let enter = {
+        ...req.body,
+        ...news
+    }
+    console.log(enter)
+    runProcedure(enter,procName)
+    res.redirect('/instructor')
+    }else{
+    res.redirect('/login')
+    }
+})
+
+app.post("/updateCourseDescription",function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+        req.session.touch;
+        procName = "UpdateCourseDescription"
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        console.log(enter)
+        runProcedure(enter,procName)
+        res.redirect('/instructor')
+        }else{
+        res.redirect('/login')
+        }
+})
+
 function runlogin(req,res){
     conn.connect().then(() => {
     var request = new mssql.Request(conn);
@@ -421,6 +481,7 @@ async function runProcedure(body, proc, expected_outputs) {
             try {
                 let recordSet = await request.execute(inputs[input][0]);
                 conn.close();
+                console.log(recordSet)
                 var result = {
                     table : recordSet.recordsets ,
                     output : recordSet.output
