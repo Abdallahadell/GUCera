@@ -113,7 +113,7 @@ app.get('/courses', async function (req, res){
     }
 })
 
-app.get('/courseDetails/:cname', async function (req, res){
+app.get('/courseDetails/:cname', async function (req, res) {
     if(req.session.iid) {
         await conn.connect();
         var request = new mssql.Request(conn);
@@ -129,6 +129,7 @@ app.get('/courseDetails/:cname', async function (req, res){
         let output = await runProcedure(queryResult.recordset[0], 'courseInformation', null);
         res.render('courseDetails', {data : output.table[0][0], instructor : instrQuery.recordset});
     }
+});
   
 app.get('/assignContent', function(req,res){
     if(req.session.iid && (req.session.type == 2)){
@@ -164,18 +165,14 @@ app.post('/studentViewAssignGrade', async function(req, res){
     let enter = req.body;
     enter.sid = req.session.iid;
     let output = await runProcedure(enter, "viewAssignGrades" , {"assignGrade" : mssql.Int});
-    console.log(output);
     res.render('studentViewAssignGrade', {data : output.output});
-    console.log(output.output);
 });
 
 app.post('/viewAssignContent', async function(req, res){
     let enter = req.body
     enter.sid = req.session.iid
     let output = await runProcedure(enter, "viewAssign");
-    console.log(output);
     res.render('studentAssignments', {data : output.table[0][0]});
-    console.log(output.table[0][0]);
 })
 
 app.get('/viewAssigninst', async function(req,res){
@@ -294,9 +291,7 @@ app.post('/listcerti', async function(req, res){
     enter.sid = req.session.iid
     var procedure = [procName, null, false, true];
     let output = await runProcedure(enter, "viewCertificate");
-    console.log(output);
     res.render('studentCertificate', {data : output.table[0][0]});
-    console.log(output.table[0][0]);
 })
 
 app.post('/login',function(req,res){
@@ -336,33 +331,21 @@ app.post('/defineAssignment',function(req,res){
     }
 })
 
-app.post('/viewAssigninst',async function(req,res){
-    if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName1="InstructorViewAcceptedCoursesByAdmin";
-    result1 = await runProcedure({instrId : req.session.iid},procName1)
-    procName="InstructorViewAssignmentsStudents";
-    conn.connect().then(()=>{
-        var request = new mssql.Request(conn);
-        request.input('cid',req.body.cid);
-        request.input('instrId',req.session.iid);
-        request.execute(procName).then(function(done){
-        res.send(done.output.recordsets)
+app.post('/viewAssigninst',async function(req, res) {
+    if(req.session.iid && (req.session.type == 0)) {
+        req.session.touch;
+        procName1="InstructorViewAcceptedCoursesByAdmin";
+        result1 = await runProcedure({instrId : req.session.iid},procName1)
+        procName="InstructorViewAssignmentsStudents";  
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
         }
-    ).catch(function (err) {
-        console.log(err + " this is error1");
-        conn.close();
-    })    
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
-    }
-    result = await runProcedure(enter,procName)
-    res.render('viewAssigninst',{result : result.table[0],result1:result1.table[0]})
-    }else{
-    res.redirect('/login')
+        result = await runProcedure(enter,procName)
+            res.render('viewAssigninst',{result : result.table[0],result1:result1.table[0]})
+    } else {
+        res.redirect('/login')
     }
 })
 
@@ -426,7 +409,6 @@ app.post("/updateContent",function(req,res){
         ...req.body,
         ...news
     }
-    console.log(enter)
     runProcedure(enter,procName)
     res.redirect('/instructor')
     }else{
@@ -443,11 +425,10 @@ app.post("/updateCourseDescription",function(req,res){
             ...req.body,
             ...news
         }
-        console.log(enter)
         runProcedure(enter,procName)
         res.redirect('/instructor')
-        }else{
-        res.redirect('/login')
+        } else {
+            res.redirect('/login')
         }
 })
 
@@ -516,7 +497,6 @@ async function runProcedure(body, proc, expected_outputs) {
             try {
                 let recordSet = await request.execute(inputs[input][0]);
                 conn.close();
-                console.log(recordSet)
                 var result = {
                     table : recordSet.recordsets ,
                     output : recordSet.output
