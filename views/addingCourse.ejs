@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -9,24 +8,59 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
-            body{
-                background-image:  #0a1750;
-                background-repeat: no-repeat;
-                background-size: fill;
+            .new{
+                background-color: #008891;
+                font-size: .80em;
+                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+                color: #e7e7de;
             }
             h1{
                 color: black;
                 text-align: center;
                 -webkit-text-stroke: 1px black;
             }
+            .zoo{
+                text-align: center;
+            }
+            .topnav a {
+                float: left;
+                color: #00587a;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+                font-size: 17px;
+            }
+            .topnav {
+                background-color: grey;
+                overflow: hidden;
+            }.topnav a.active {
+                background-color: #6f9eaf;
+                color: #e7e7de;
+                pointer-events: none;
+            }
+            .topnav a:hover {
+                background-color: #008891;
+                color: #e7e7de;
+            }
         </style>
     </head>
-    <body>
+    <body class="new">
+        <div class="topnav">
+            <a href="/instructor">Home</a>
+            <a class="active" href="addcourse">Add course</a>
+            <a href="defineAssignment">Add assesment</a>
+            <a href="/viewFeedback">View student feedback</a> 
+            <a href="/viewAssigninst">View assignment students</a>
+            <a href="/IssueCertificate">Issue certificate</a>
+            <a href="/instructorProfile">Profile</a>
+            <a href="/logout">Log out</a>
+        </div>
+        <div class="zoo">
         <form method="POST" action="/addingCourse">
             Credit hours :<br>
             <input id="creditHours" TYPE="text" value="" name="creditHours" required>
             <br>
-            Name :<br>
+    Name :<br>
             <input id="Name" TYPE="text" value="" name="Name" required>
             <br>
             Price :<br>
@@ -35,5 +69,6 @@
             <br>
             <input type="submit" value="Submit">
         </form>
+        </div>
     </body>
 </html>

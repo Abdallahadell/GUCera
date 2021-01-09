@@ -43,17 +43,18 @@ app.get('/submitAssign', function(req, res){
     if(req.session.iid && (req.session.type == 2)){
     res.render('submitAssign');
     }else{
-        res.redirect('/login')
+    res.redirect('/login')
     }
 })
 
 app.get('/addFeedback', function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch;
         res.render('AddFeedback');
         }else{
             res.redirect('/login')
         }
-});
+})
 
 app.get('/listCert', function(req, res){
     if(req.session.iid && (req.session.type == 2)){
@@ -61,9 +62,11 @@ app.get('/listCert', function(req, res){
         }else{
             res.redirect('/login')
         }
-});
+})
+
 app.get('/instructor',function(req,res){
     if(req.session.iid && (req.session.type == 0)){
+        req.session.touch;
         res.render('instructor')
         }else{
         res.redirect('/login')
@@ -72,24 +75,24 @@ app.get('/instructor',function(req,res){
 
 app.get('/addCourse', function(req,res){
     if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     res.render('addingCourse')
-}else{
+    }else{
     res.redirect('/login')
 }
 })
 
 app.get('/defineAssignment',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-        conn.connect();
+    req.session.touch;
+    conn.connect();
     procName="InstructorViewAcceptedCoursesByAdmin";
     var news = {instrId : req.session.iid }
     let enter = {
         ...req.body,
         ...news
     }
-    console.log(enter)
     result = await runProcedure(enter,procName)
-    console.log(result.table[0][0])
     res.render('defineAssignment',{result:result.table[0]})
     }else{
     res.redirect('/login')
@@ -129,6 +132,18 @@ app.get('/viewGrade', function(req, res){
     }
 })
 
+app.get('/instructorProfile',async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
+    conn.connect();
+    procName="ViewInstructorProfile";
+    var news = {instrId : req.session.iid }
+    result = await runProcedure(news,procName)
+    res.render('instructorProfile',{result : result.table[0][0]})
+    }else{
+    res.redirect('/login')
+    }
+})
 app.post('/studentViewAssignGrade', async function(req, res){
     let enter = req.body;
     enter.sid = req.session.iid;
@@ -148,6 +163,8 @@ app.post('/viewAssignContent', async function(req, res){
 })
 
 app.get('/viewAssigninst', async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     conn.connect();
     procName="InstructorViewAcceptedCoursesByAdmin";
     var news = {instrId : req.session.iid }
@@ -155,12 +172,16 @@ app.get('/viewAssigninst', async function(req,res){
         ...req.body,
         ...news
     }
-    console.log(enter)
     result1 = await runProcedure(enter,procName)
     res.render('viewAssigninst',{result:"",result1:result1.table[0]})
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.get('/IssueCertificate',async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;    
     conn.connect();
     procName="InstructorViewAcceptedCoursesByAdmin";
     var news = {instrId : req.session.iid }
@@ -168,18 +189,24 @@ app.get('/IssueCertificate',async function(req,res){
         ...req.body,
         ...news
     }
-    console.log(enter)
     result = await runProcedure(enter,procName)
-    console.log(result.table[0][0])
     res.render('issueCertificate',{result:result.table[0]})
+    }else{
+    res.redirect('/login')    
+    }
 })
 
 app.get('/viewFeedback', async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     conn.connect();
     procName="InstructorViewAcceptedCoursesByAdmin";
     var news = {instrId : req.session.iid }
     result1 = await runProcedure(news,procName)
     res.render('viewFeedback',{result:"",result1:result1.table[0]})
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.post('/register', function(req, res) {
@@ -199,12 +226,17 @@ app.post('/submitAssignment', function(req, res){
 });
 
 app.post('/feedback', function(req, res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     procName = "addFeedback";
     let enter = req.body
     enter.sid = req.session.iid
     var procedure = [procName, null, false, true];
     runProcedure(enter, procName);
     res.redirect('/addFeedback');
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.post('/listcerti', async function(req, res){
@@ -216,7 +248,7 @@ app.post('/listcerti', async function(req, res){
     console.log(output);
     res.render('studentCertificate', {data : output.table[0][0]});
     console.log(output.table[0][0]);
-});
+})
 
 app.post('/login',function(req,res){
     conn.connect();
@@ -224,18 +256,24 @@ app.post('/login',function(req,res){
 })
 
 app.post('/addingCourse',function(req,res){
-    procName = "InstAddCourse"
-    var news = {instructorId : req.session.iid }
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
+    procName = "InstAddCourse";
+    var news = {instructorId : req.session.iid };
     let enter = {
         ...req.body,
         ...news
     }
-    console.log(enter)
     runProcedure(enter,procName)
     res.redirect('/instructor')
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.post('/defineAssignment',function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     procName = "DefineAssignmentOfCourseOfCertianType";
     var news = {instId : req.session.iid }
     let enter = {
@@ -244,9 +282,14 @@ app.post('/defineAssignment',function(req,res){
     }
     runProcedure(enter,procName)
     res.redirect('/instructor')
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.post('/viewAssigninst',async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     conn.connect();
     procName1="InstructorViewAcceptedCoursesByAdmin";
     result1 = await runProcedure({instrId : req.session.iid},procName1)
@@ -258,9 +301,14 @@ app.post('/viewAssigninst',async function(req,res){
     }
     result = await runProcedure(enter,procName)
     res.render('viewAssigninst',{result : result.table[0],result1:result1.table[0]})
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.post("/viewFeedback", async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     conn.connect();
     procName1="InstructorViewAcceptedCoursesByAdmin";
     result1 = await runProcedure({instrId : req.session.iid},procName1)
@@ -272,20 +320,29 @@ app.post("/viewFeedback", async function(req,res){
     }
     result = await runProcedure(enter,procName)
     res.render('viewFeedback',{result : result.table[0],result1:result1.table[0]})
+    }else{
+    res.redirect('/login')
+    }
 })
 
 app.post("/issueCertificate",function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     procName = "InstructorIssueCertificateToStudent";
     var news = {insId: req.session.iid, issueDate : new Date() }
     let enter = {
         ...req.body,
         ...news
     }
-    console.log(enter)
     runProcedure(enter,procName)
     res.redirect('/instructor')
+    }else{
+    res.redirect('/login')
+    }
 })
 app.post("/gradeAssignment",function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
     procName = "InstructorgradeAssignmentOfAStudent";
     var news = {instrId : req.session.iid }
     let enter = {
@@ -294,6 +351,9 @@ app.post("/gradeAssignment",function(req,res){
     }
     runProcedure(enter,procName)
     res.redirect('/instructor')
+    }else{
+    res.redirect('/login')
+    }
 })
 
 function runlogin(req,res){
@@ -374,6 +434,11 @@ async function runProcedure(body, proc, expected_outputs) {
         }
     }
 }
+
+app.get('/logout',function(req,res){
+    req.session.destroy();
+    res.redirect('/login');
+})
 
 function runStudentRegister(req) {
     conn.connect().then(function () {
