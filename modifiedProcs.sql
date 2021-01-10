@@ -20,3 +20,22 @@ LEFT OUTER JOIN Student ON StudentTakeCourse.sid = Student.id
 WHERE Course.accepted = '1'
 
 go
+
+CREATE PROC submitAssign
+@assignType VARCHAR(10),
+@assignnumber int,
+@sid INT,
+@cid INT
+AS
+BEGIN
+IF (EXISTS(SELECT * FROM StudentTakeCourse WHERE cid = @cid AND sid = @sid ))
+    BEGIN
+        IF (EXISTS(SELECT * FROM StudentTakeAssignment WHERE assignmenttype = @assignType AND assignmentNumber = @assignnumber))
+            print 'Already submitted'
+        ELSE
+            INSERT INTO StudentTakeAssignment values (@sid,@cid,@assignnumber,@assignType,null)
+END
+ELSE
+    print 'not enrolled in course'
+END
+GO
