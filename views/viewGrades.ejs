@@ -9,25 +9,26 @@
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<div class="topnav">
-    <a href="student">Home</a>
-    <a href="courses">Courses</a>
-    <a href="profile">My Profile</a>
-    <a href="#about">About</a>
-</div>
+    <div class="topnav">
+        <a href="student">Home</a>
+        <a href="courses">Courses</a>
+        <a href="profile">My Profile</a>
+        <a class="active" href="/viewGrades">Grades</a>
+        <a class="logout" href="/logout" style="float: right;">Logout</a>
+    </div>
     <form method = "POST" action="/studentViewAssignGrade">
         Assign number : <br>
         <input type="text" id="assignNumber" name="assignNumber" maxlength="1" required> <br>
         Assign Type : <br>
         <select name="assignType" id="assignType">
-        <option value="quiz">quiz</option>
-        <option value="Project">Project</option>
-        <option value="Exam">Exam</option> 
-    </select>
-    <br>
+            <option value="quiz">quiz</option>
+            <option value="Project">Project</option>
+            <option value="Exam">Exam</option> 
+        </select>
+        <br>
         Course id : <br>
         <input type="text" id="cid" name="cid" maxlength="4" required> <br>
-         <br>
+        <br>
         <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit"> <br>
     </form>
 </body>

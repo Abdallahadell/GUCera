@@ -2,23 +2,6 @@
 <html lang="en">
 <head>
     <style>
-        .new{
-            background-color: #008891;
-            font-size: .80em;
-            font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
-            color: #e7e7de;
-        }
-        h1 {
-            color: white;
-            text-align: center;
-            -webkit-text-stroke: 1px black;
-        }
-        .cont {
-            position: absolute;
-            left:45%;
-            top:30%;
-            color: white;
-        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,24 +9,31 @@
     <title>Welcome</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <style>
-            body {
-               background-image: url("background2.jpg");
-               background-repeat: no-repeat;
-               background-size: 150%;
-            }
-            h1 {
-                color: white;
-                text-align: center;
-                -webkit-text-stroke: 1px black;
-            }
-            .cont {
-                position:relative;
-                left:600px;
-                top:50px;
-                color: white;
-            }
-        </style>
+    <style>
+        body {
+            background-image: url("background2.jpg");
+            background-size: cover;
+        }
+
+        h1 {
+            padding-top: 50px;
+            color: white;
+            text-align: left;
+        }
+
+        .new{
+            font-size: .80em;
+            font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+            color: #e7e7de;
+        }
+        
+        .cont {
+            text-align: left;
+            padding-left: 220px;
+            margin-top: 50px;
+            color: white;
+        }
+    </style>
 </head>
 
 <body class ="new">
@@ -53,15 +43,15 @@
     <div class="cont">
         <form method="POST" action="/login">
             Email :<br>
-            <input type="text" name="id">
+            <input type="text" name="id" required>
             <br>
             Password :<br>
-            <input type="password" name="password">
-            <p style="color: red;"><%=error%> </p>
+            <input type="password" name="password" required>
+            <br> <br> <p style="color: crimson; font-size: 15px; font-weight: 500;"><%=error%> </p>
             <input type="submit" value="Login">
         </form>
         <br>
-        <a href="registration" style="color: white;">I dont have an account</a>
+        <a href="registration" style="color: white; font-size: 20px;">I dont have an account</a>
     </div>
     
 </body>
