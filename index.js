@@ -55,21 +55,111 @@ app.get('/submitAssign', async function(req, res){
     }
 })
 
-app.get('/addFeedback', function(req, res){
+app.get('/addFeedback', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
-        req.session.touch;
-        res.render('AddFeedback');
-        }else{
-            res.redirect('/login')
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            var studQuery = await request.query("select c.name from course c");
+        } catch(err){
+            console.log(err);
         }
+        res.render('addFeedback', {student :studQuery.recordset});
+        }
+    else{
+        res.redirect('/login')
+    }
+});
+
+app.get('/addFeedbacksForCourses/:name', async function(req, res){
+    if(req.session.iid && (req.session.type == 2)){
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try {
+            request.input('name', req.params.name);
+            var queryResult = await request.query("select id from Course where name = @name");
+            request.input('cid', queryResult.recordset[0].id);
+        } catch (err) {
+            console.log(err);
+        }
+        conn.close();
+        res.render('addFeedbacksForCourses', {data : queryResult.recordset[0]});
+        console.log(queryResult.recordset[0]);
+    }
 })
 
-app.get('/listCert', function(req, res){
+app.get('/listCert', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
-        res.render('listCertificates');
-        }else{
-            res.redirect('/login')
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            var studQuery = await request.query("select c.name from course c ");
+        } catch(err){
+            console.log(err);
         }
+        res.render('listCertificates', {student :studQuery.recordset});
+        }
+    else{
+        res.redirect('/login')
+    }
+})
+
+app.get('/studentCertificate/:name', async function(req,res){
+    if(req.session.iid && (req.session.type == 2)){
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            request.input('name', req.params.name);
+            var queryResult = await request.query("select id as 'cid' from Course where name = @name");
+            request.input('cid', queryResult.recordset[0].cid);
+        } catch(err){
+            console.log(err);
+        }
+        conn.close();
+        queryResult.recordset[0].Sid = req.session.iid;
+        console.log(  queryResult.recordset)
+        let output = await runProcedure(queryResult.recordset[0], 'viewCertificate', null);
+        console.log(queryResult.recordset[0])
+        res.render('studentCertificate',{data: output.table[0]});
+        }
+    else{
+        res.redirect('/login')
+    }
+})
+  
+app.get('/studentViewAssignGrade/:name', async function(req, res){
+    if(req.session.iid && (req.session.type == 2)){
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try {
+            request.input('name', req.params.name);
+            var queryResult = await request.query("select id from Course where name = @name");
+            request.input('cid', queryResult.recordset[0].id);
+            var assignQuery = await request.query("select a.type as 'assignType', a.number as 'assignnumber', a.cid from Assignment a inner join course C on a.cid = c.id where c.id = @cid");
+            var flagQuery = await request.query("select * from assignment a where a.cid = @cid");
+            var flag = (flagQuery.recordset.length == 0);
+        } catch (err) {
+            console.log(err);
+        }
+        conn.close();
+        res.render('studentviewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+    }
+});
+
+app.get('/assignContent', async function(req,res){
+    if(req.session.iid && (req.session.type == 2)){
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            var studQuery = await request.query("select c.name from course c inner join studentTakeCourse s on c.id = s.cid");
+        } catch(err){
+            console.log(err);
+        }
+        res.render('viewAssign', {student :studQuery.recordset});
+        }
+    else{
+        res.redirect('/login')
+    }
 })
 
 app.get('/instructor',function(req,res){
@@ -363,6 +453,13 @@ app.post('/viewTheGrade/:cid', async function(req,res){
     req.body.assignnumber = q[1];
     let output = await runProcedure(req.body, 'viewAssignGrades', {"assignGrade" : mssql.Int});
     res.render('viewAssignGrades', {data : output.output});
+})
+
+app.post('/feedback/:cid', function(req, res){
+    req.body.sid = req.session.iid;
+    req.body.cid = req.params.cid;
+    runProcedure(req.body, 'addFeedback')
+    res.redirect('/addFeedback')
 })
 
 app.post('/submit/:cid', function(req, res){
