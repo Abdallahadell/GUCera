@@ -62,29 +62,32 @@
     </div>
     <div class="dumbo">
         <label>First name :</label>
-        <span><%=result.firstName  %> </span>
+        <span><%=result[0].firstName  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Last name :</label>
-        <span><%=result.lastName  %> </span>
+        <span><%=result[0].lastName  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Gender :</label>
-        <% if(result.gender.readInt8()==0){result.gender="Male"} else {result.gender="Female"} %>
-        <span><%=result.gender  %> </span>
+        <% if(result[0].gender.readInt8()==0){result[0].gender="Male"} else {result[0].gender="Female"} %>
+        <span><%=result[0].gender  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Email :</label>
-        <span><%=result.email  %> </span>
+        <span><%=result[0].email  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Address :</label>
-        <span><%=result.address  %> </span>
+        <span><%=result[0].address  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Rating :</label>
-        <span><%=result.rating  %> </span>
+        <span><%=result[0].rating  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Email :</label>
-        <span><%=result.email  %> </span>
+        <span><%=result[0].email  %> </span>
         <br style="-webkit-user-select: auto;">
+        <% for(i=0;i<result.length;i++) {%> 
         <label class="sod">Mobile number :</label>             
-        <span><%=result.mobileNumber  %> </span>
+        <span><%=result[i].mobileNumber  %> </span>
+        <br>
+        <% } %> 
         <br style="-webkit-user-select: auto;">
         <button class="open-button" onclick="openPhonenumber()">Add number</button>
     </div>
