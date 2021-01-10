@@ -39,3 +39,16 @@ ELSE
     print 'not enrolled in course'
 END
 GO
+
+CREATE Proc DefineAssignmentOfCourseOfCertianType
+@instId int,
+@cid int ,
+@number int,
+@type varchar(10),
+@fullGrade int,
+@weight decimal(4,1),
+@deadline datetime,
+@content varchar(200)
+As
+if(exists(select * from Course c inner join InstructorTeachCourse e ON c.id=e.cid  where id=@cid and e.insid =@instId))
+Insert into Assignment values (@cid ,@number,@type,@fullGrade,@weight ,@deadline ,@content)
