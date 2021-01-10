@@ -10,7 +10,7 @@
     </head>
     <body>
         <div class="topnav">
-            <a href="student">Home</a>
+            <a href="/student">Home</a>
             <a href="courses">Courses</a>
             <a href="profile">My Profile</a>
             <a href="#about">About</a>
@@ -21,9 +21,35 @@
         <div class="table">
             <table cellspacing=10px>
                 <tr>
-                <td>Assignment content : </td>
-                <td><%=data.content%></td>
-                </tr>  
-            </table>
+                    <td>
+                        Course ID
+                    </td>
+                    <td>
+                        Assign number
+                    </td>
+                    <td>
+                        Assign type
+                    </td>
+                    <td>
+                        Grade
+                    </td>
+                    <td>
+                        Weight
+                    </td>
+                    <td>
+                        Deadline
+                    </td>
+                    <td>
+                        Content
+                    </td>
+                </tr>
+                  <%for(var index = 0; index < data.length; index++ ) { %>
+                    <tr>  
+                    <% for(var key in data[index]){ %> 
+                      <td><%=data[index][key]%></td>
+                    <% } %> 
+                    </tr>
+                  <% } %>
+              </table>
     </body>
 </html>
