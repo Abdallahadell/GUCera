@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Update content</title>
+        <title>Add instructor</title>
         <style>
             .new{
                 text-align: center;
@@ -46,8 +46,8 @@
             <a href="/instructor">Home</a>
             <a href="addcourse">Add course</a>
             <a href="defineAssignment">Add assesment</a>
-            <a href="/addInstructor">Add instructor</a>
-            <a class="active" href="/updateContent">Content</a>
+            <a class="active"  href="/addInstructor">Add instructor</a>
+            <a href="/updateContent">Content</a>
             <a href="/updateCourseDescription">Course description</a>
             <a href="/viewFeedback">View student feedback</a> 
             <a href="/viewAssigninst">View assignment students</a>
@@ -56,8 +56,8 @@
             <a href="/logout">Log out</a>
         </div>
         <div class="zoo">
-            <form method="POST" action="/updateContent">
-            Course :<select id="courseId" name="courseId" required>
+            <form method="POST" action="/addInstructor">
+            Course :<select id="cid" name="cid" required>
                 <option selected value='0'>Choose a course</option>
                 <%   
                 for(i = 0 ; i < result1.length ; i++) {
@@ -67,11 +67,11 @@
             </select>
             <br>
             <br>
-            <label>  Content :</label> 
-            <input id="content" name="content" type="text" value="" maxlength="200">
+            <label>  ID :</label> 
+            <input id="insid" name="insid" type="number" value="" min='1'>
             <br>
             <br>
-            <input id="Button2"  type="submit" value="Update">
+            <input id="Button2"  type="submit" value="Add">
             </form>
         </div>
     </body>
