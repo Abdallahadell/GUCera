@@ -13,9 +13,10 @@
 <body>
     <div class="topnav">
         <a href="/student">Home</a>
-        <a href="/courses" class="active">Avaliable Courses</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
+        <a href="/courses" class="active">Courses</a>
+        <a href="/profile">My Profile</a>
+        <a href="/viewGrades">Grades</a>
+        <a class="logout" href="/logout" style="float: right;">Logout</a>
     </div>
     <div class="container">
         <h1>Course Details</h1>
@@ -29,14 +30,19 @@
             </tr>
           <%}%>
         </table>
-        <form action="/enroll/<%= data["Course ID"] %> " method="POST">
+        <form action="/enroll/<%= data["Course ID"] %>" method="POST" id="enForm">
           <select name="instr" id="instr">
             <% for( let index = 0; index < instructor.length; index++ ) { %>
               <option value="<%=instructor[index].insid%>"><%=instructor[index].name%></option>
             <% } %>
           </select> <br><br>
-          <input type="submit" class="btn btn-secondary">
+          <input type="submit" class="btn btn-secondary" value="Enroll">
         </form>
     </div>
+    <script>
+      if('<%=enrolled%>'=='true') {
+        document.getElementById("enForm").remove();
+      }
+    </script>
 </body>
 </html>

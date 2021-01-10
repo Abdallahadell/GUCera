@@ -122,12 +122,19 @@ app.get('/courseDetails/:cname', async function (req, res) {
             var queryResult = await request.query("select id from Course where name = @cname");
             request.input('cid', queryResult.recordset[0].id);
             var instrQuery = await request.query("select i.insid, u.firstName + ' ' + u.lastName as 'name' from InstructorTeachCourse i inner join Users u on i.insid = u.id where cid = @cid");
+            request.input('sid', req.session.iid);
+            var flagQuery = await request.query("select c.name from course c inner join StudentTakeCourse s on c.id = s.cid where c.name = @cname and s.sid = @sid");
+            var flag = (flagQuery.recordset[0].name == req.params.cname);
         } catch(err) {
             console.log(err);
         }
+        try {
+        } catch (err) {
+            
+        }
         conn.close();
         let output = await runProcedure(queryResult.recordset[0], 'courseInformation', null);
-        res.render('courseDetails', {data : output.table[0][0], instructor : instrQuery.recordset});
+        res.render('courseDetails', {data : output.table[0][0], instructor : instrQuery.recordset, enrolled : flag});
     }
 })
 
