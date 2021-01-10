@@ -15,20 +15,22 @@
             <a href="profile">My Profile</a>
             <a href="#about">About</a>
         </div>
-    <form method = 'POST' action="/submitAssignment">
-        Assign Type : <br>
-        <select name="assignType" id="assignType">
-        <option value="quiz">quiz</option>
-        <option value="Project">Project</option>
-        <option value="Exam">Exam</option> 
-    </select>
-    <br>
-        Assign number : <br>
-        <input type="text" id="assignNumber" name="assignNumber" maxlength="1" required> <br>
-        Course id : <br>
-        <input type="text" id="cid" name="cid" maxlength="4" required> <br>
-         <br>
-        <input type="submit" id="simple_click" class="btn btn-secondary" value="SubmitAssign"> <br>
-    </form>
+        <div class="container">
+            <h1>All Avaliable Courses</h1>
+        </div>
+        <div class="table">
+            <table cellspacing=10px>
+                <tr>
+                  <td>Courses Assignments</td>
+                </tr>
+                <tr>
+                  <%for(var index = 0; index < student.length; index++ ) { %>
+                    <tr>
+                      <td><a href="studentSubmitAssignments/<%= student[index].name %>" style="color: white;"><%= student[index].name %></a></td>
+                    </tr>
+                  <% } %>
+                </tr>
+              </table>
+        </div>
 </body>
 </html>

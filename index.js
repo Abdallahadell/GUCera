@@ -39,11 +39,24 @@ app.get('/student', function(req, res) {
     }
 });
 
-app.get('/submitAssign', function(req, res){
+app.get('/submitAssign', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
-    res.render('submitAssign');
-    }else{
-    res.redirect('/login')
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            //request.input('cname', req.params.cname);
+            //var queryResult = await request.query("select id from Course where name = @cname");
+           // request.input('cid', queryResult.recordset[0].id);
+            var studQuery = await request.query("select c.name from course c");
+        } catch(err){
+            console.log(err);
+        }
+        //let enter = req.body;
+        //let output = await runProcedure({req.session.iid}, 'enrollInCourseViewContent', null);
+        res.render('submitAssign', {student :studQuery.recordset});
+        }
+    else{
+        res.redirect('/login')
     }
 })
 
@@ -131,6 +144,26 @@ app.get('/courseDetails/:cname', async function (req, res) {
     }
 });
 
+app.get('/studentSubmitAssignments/:name', async function(req,res){
+    if(req.session.iid && (req.session.type == 2)){
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try {
+            request.input('name', req.params.name);
+            var queryResult = await request.query("select id from Course where name = @name");
+            request.input('cid', queryResult.recordset[0].id);
+            var assignQuery = await request.query("select a.type as 'assignType', a.number as 'assignnumber', a.cid from Assignment a inner join course C on a.cid = c.id where c.id = @cid");
+            var flagQuery = await request.query("select * from assignment a where a.cid = @cid");
+            var flag = (flagQuery.recordset.length == 0);
+        } catch (err) {
+            console.log(err);
+        }
+        conn.close();
+        //let output = await runProcedure(queryResult.recordset[0], 'viewAssign', null);
+        res.render('studentSubmitAssignments', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+    }
+});
+
 app.get('/studentAssignments/:name', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
         await conn.connect();
@@ -146,7 +179,6 @@ app.get('/studentAssignments/:name', async function(req, res){
         queryResult.recordset[0].Sid = req.session.iid;
         let output = await runProcedure(queryResult.recordset[0], 'viewAssign', null);
         res.render('studentAssignments',{data: output.table[0]});
-        console.log(output.table[0]);
         }
     else{
         res.redirect('/login')
@@ -165,7 +197,6 @@ app.get('/assignContent', async function(req,res){
         } catch(err){
             console.log(err);
         }
-        console.log(studQuery);
         //let enter = req.body;
         //let output = await runProcedure({req.session.iid}, 'enrollInCourseViewContent', null);
         res.render('viewAssign', {student :studQuery.recordset});
@@ -288,14 +319,19 @@ app.post('/enroll/:cid', function(req, res) {
     req.body.cid = req.params.cid
     runProcedure(req.body, 'enrollInCourse');
     res.redirect("/courses");
-})
+});
 
-app.post('/submitAssignment', function(req, res){
-    procName = "submitAssign";
-    let enter = req.body
-    enter.sid = req.session.iid
-    var procedure = [procName, null, false, true];
-    runProcedure(enter, procName);
+app.post('/submit/:cid', function(req, res){
+    req.body.sid = req.session.iid;
+    req.body.cid = req.params.cid;
+    /*for(i = 0; i<req.body.assign.length; i++){
+        if(req.body.assign.charAt[i].equals"^")
+    }*/
+    let q = req.body.assign.split("^");
+    delete req.body.assign;
+    req.body.assignType = q[0];
+    req.body.assignnumber = q[1];
+    runProcedure(req.body, 'submitAssign');
     res.redirect('/submitAssign');
 });
 
