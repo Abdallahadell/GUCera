@@ -9,21 +9,25 @@
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<div class="topnav">
+  <div class="topnav">
     <a href="student">Home</a>
     <a href="courses">Courses</a>
     <a href="profile">My Profile</a>
-    <a href="#about">About</a>
+    <a href="/viewGrades">Grades</a>
+    <a class="logout" href="/logout" style="float: right;">Logout</a>
 </div>
-    <div class="container">
-        <h1>Your assignments grades</h1>
-    </div>
-    <div class = "table">
-    <table cellspacing=10px>
-        <tr>
-          <td>Assignment Grade : </td>
-          <td><%=data.assignGrade%></td>
-        </tr> 
-    </div> 
+<form action="/viewTheGrade/<%= cid %> " method="POST" id="enForm">
+    <select name="assign" id="assignType">
+      <% for( let index = 0; index < Assignment.length; index++ ) { %>
+        <option value="<%=Assignment[index].assignType%>^<%=Assignment[index].assignnumber%>"><%=Assignment[index].assignType%> <%=Assignment[index].assignnumber%></option>
+      <% } %>
+    </select> <br><br>
+    <input type="submit" class="btn btn-secondary">
+  </form>
+  <script>
+    if('<%=assigned%>'=='true') {
+      document.getElementById("enForm").remove();
+    }
+  </script>
 </body>
 </html>
