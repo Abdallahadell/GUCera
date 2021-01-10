@@ -10,9 +10,9 @@
     </head>
     <body>
         <div class="topnav">
-            <a href="student">Home</a>
-            <a href="courses">Courses</a>
-            <a href="profile">My Profile</a>
+            <a href="/student">Home</a>
+            <a href="/courses">Courses</a>
+            <a href="/profile">My Profile</a>
             <a href="#about">About</a>
         </div>
         <div class="container">
@@ -21,13 +21,23 @@
         <div class = "table">
             <table cellspacing=10px>
                 <tr>
-                <td>Course id : </td>
-                <td><%=data.cid%></td>
-                </tr>  
-                <tr>
-                    <td>Issue date : </td>
-                    <td><%=data.issueDate%></td>
-                </tr> 
+                    <td>
+                        Course ID
+                    </td>
+                    <td>
+                        Student ID
+                    </td>
+                    <td>
+                        Issue Date
+                    </td>
+                </tr>
+                 <%for(var index = 0; index < data.length; index++ ) { %>
+                    <tr>  
+                    <% for(var key in data[index]){ %> 
+                      <td><%=data[index][key]%></td>
+                    <% } %> 
+                    </tr>
+                  <% } %>
             </table>
         </div>
     </body>
