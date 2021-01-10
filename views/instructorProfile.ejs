@@ -13,9 +13,9 @@
                 float: left;
                 color: #00587a;
                 text-align: center;
-                padding: 14px 16px;
+                padding: 14px 12px;
                 text-decoration: none;
-                font-size: 17px;
+                font-size: 14px;
             }
             .topnav {
                 background-color: grey;
@@ -35,6 +35,9 @@
                 font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
                 color: #e7e7de;
             }
+            .sod{
+                padding-right: 5px;
+            }
         </style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,6 +51,7 @@
         <a href="/instructor">Home</a>
         <a href="addcourse">Add course</a>
         <a href="defineAssignment">Add assesment</a>
+        <a href="/addInstructor">Add instructor</a>
         <a href="/updateContent">Content</a>
         <a href="/updateCourseDescription">Course description</a>
         <a href="/viewFeedback">View student feedback</a> 
@@ -64,6 +68,7 @@
         <span><%=result.lastName  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Gender :</label>
+        <% if(result.gender.readInt8()==0){result.gender="Male"} else {result.gender="Female"} %>
         <span><%=result.gender  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Email :</label>
@@ -78,10 +83,24 @@
         <label>Email :</label>
         <span><%=result.email  %> </span>
         <br style="-webkit-user-select: auto;">
-        <label>Mobile number :</label>
+        <label class="sod">Mobile number :</label>             
         <span><%=result.mobileNumber  %> </span>
         <br style="-webkit-user-select: auto;">
+        <button class="open-button" onclick="openPhonenumber()">Add number</button>
+    </div>
+    <div id="myForm" style="display: none; text-align: center">
+        <form method="POST" action="/addPhoneNumber">
+        <label>Number :</label>
+        <input type="text" name="mobile_number">
+        <br>
+        <button type="submit" value="submit"></button>
+        </form>
     </div>
 
+    <script>
+        function openPhonenumber(){
+    document.getElementById("myForm").style.display = "block";
+}
+    </script>
 </body>
 </html>

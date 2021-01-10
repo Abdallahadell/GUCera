@@ -86,7 +86,7 @@ app.get('/defineAssignment',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;
     conn.connect();
-    procName="InstructorViewAcceptedCoursesByAdmin";
+    procName="InstructorViewTeachingCourse";
     var news = {instrId : req.session.iid }
     let enter = {
         ...req.body,
@@ -129,6 +129,7 @@ app.get('/courseDetails/:cname', async function (req, res){
         let output = await runProcedure(queryResult.recordset[0], 'courseInformation', null);
         res.render('courseDetails', {data : output.table[0][0], instructor : instrQuery.recordset});
     }
+})
   
 app.get('/assignContent', function(req,res){
     if(req.session.iid && (req.session.type == 2)){
@@ -182,7 +183,7 @@ app.get('/viewAssigninst', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;
     conn.connect();
-    procName="InstructorViewAcceptedCoursesByAdmin";
+    procName="InstructorViewTeachingCourse";
     var news = {instrId : req.session.iid }
     let enter = {
         ...req.body,
@@ -199,7 +200,7 @@ app.get('/IssueCertificate',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;    
     conn.connect();
-    procName="InstructorViewAcceptedCoursesByAdmin";
+    procName="InstructorViewTeachingCourse";
     var news = {instrId : req.session.iid }
     let enter = {
         ...req.body,
@@ -216,7 +217,7 @@ app.get('/viewFeedback', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;
     conn.connect();
-    procName="InstructorViewAcceptedCoursesByAdmin";
+    procName="InstructorViewTeachingCourse";
     var news = {instrId : req.session.iid }
     result1 = await runProcedure(news,procName)
     res.render('viewFeedback',{result:"",result1:result1.table[0]})
@@ -229,7 +230,7 @@ app.get('/updateContent',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
         req.session.touch;
         conn.connect();
-        procName="InstructorViewAcceptedCoursesByAdmin";
+        procName="InstructorViewTeachingCourse";
         var news = {instrId : req.session.iid }
         result1 = await runProcedure(news,procName)
         res.render('updateContent',{result1:result1.table[0]})
@@ -242,13 +243,30 @@ app.get('/updateCourseDescription',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
         req.session.touch;
         conn.connect();
-        procName="InstructorViewAcceptedCoursesByAdmin";
+        procName="InstructorViewTeachingCourse";
         var news = {instrId : req.session.iid }
         result1 = await runProcedure(news,procName)
         res.render('courseDescription',{result1:result1.table[0]})
         }else{
         res.redirect('/login')
         }
+})
+app.get('/addInstructor',async function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+        req.session.touch;
+        conn.connect();
+        procName="InstructorViewTeachingCourse";
+        var news = {instrId : req.session.iid }
+        result1 = await runProcedure(news,procName)
+        res.render('addinstructor',{result1:result1.table[0]})
+        }else{
+        res.redirect('/login')
+        }
+})
+
+app.get('/logout',function(req,res){
+    req.session.destroy();
+    res.redirect('/login');
 })
 
 app.post('/register', function(req, res) {
@@ -314,7 +332,7 @@ app.post('/addingCourse',function(req,res){
         ...news
     }
     runProcedure(enter,procName)
-    res.redirect('/instructor')
+    res.redirect('/updateCourseDescription')
     }else{
     res.redirect('/login')
     }
@@ -340,20 +358,9 @@ app.post('/viewAssigninst',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;
     conn.connect();
-    procName1="InstructorViewAcceptedCoursesByAdmin";
+    procName1="InstructorViewTeachingCourse";
     result1 = await runProcedure({instrId : req.session.iid},procName1)
     procName="InstructorViewAssignmentsStudents";
-    conn.connect().then(()=>{
-        var request = new mssql.Request(conn);
-        request.input('cid',req.body.cid);
-        request.input('instrId',req.session.iid);
-        request.execute(procName).then(function(done){
-        res.send(done.output.recordsets)
-        }
-    ).catch(function (err) {
-        console.log(err + " this is error1");
-        conn.close();
-    })    
     var news = {instrId : req.session.iid }
     let enter = {
         ...req.body,
@@ -370,7 +377,7 @@ app.post("/viewFeedback", async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
     req.session.touch;
     conn.connect();
-    procName1="InstructorViewAcceptedCoursesByAdmin";
+    procName1="InstructorViewTeachingCourse";
     result1 = await runProcedure({instrId : req.session.iid},procName1)
     procName="ViewFeedbacksAddedByStudentsOnMyCourse";
     var news = {instrId : req.session.iid }
@@ -432,6 +439,44 @@ app.post("/updateContent",function(req,res){
     }else{
     res.redirect('/login')
     }
+})
+
+app.post("/addInstructor",function(req,res){
+    if(req.session.iid && (req.session.type == 0)){
+    req.session.touch;
+    procName = "AddAnotherInstructorToCourse"
+    var news = {adderIns : req.session.iid }
+    let enter = {
+        ...req.body,
+        ...news
+    }
+    console.log(enter)
+    runProcedure(enter,procName)
+    res.redirect('/instructor')
+    }else{
+    res.redirect('/login')
+    }
+})
+
+app.post("/addPhoneNumber",function(req,res){
+    if(req.session.iid ){
+        req.session.touch;
+        procName = "addMobile"
+        var news = {ID : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        if(req.session.type == 0){
+            res.redirect('/instructorProfile')
+        }
+        else if(req.session.type == 2){
+            res.redirect('/profile')
+        }
+        }else{
+        res.redirect('/login')
+        }
 })
 
 app.post("/updateCourseDescription",function(req,res){
@@ -531,10 +576,7 @@ async function runProcedure(body, proc, expected_outputs) {
     }
 }
 
-app.get('/logout',function(req,res){
-    req.session.destroy();
-    res.redirect('/login');
-})
+
 
 function runStudentRegister(req) {
     conn.connect().then(function () {
