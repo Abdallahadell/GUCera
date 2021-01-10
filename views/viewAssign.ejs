@@ -12,14 +12,25 @@
 <div class="topnav">
     <a href="student">Home</a>
     <a href="courses">Courses</a>
-    <a href="profile">My Profile</a>
+    <a href="profile">my profile</a>
     <a href="#about">About</a>
 </div>
-    <form method = 'POST' action="/viewAssignContent">
-        Course id : <br>
-        <input type="text" id="courseId" name="courseId" maxlength="4" required> <br>
-        <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit"> <br>
-    </form>
-    </div>
+<div class="container">
+    <h1>All Avaliable Courses</h1>
+</div>
+<div class="table">
+    <table cellspacing=10px>
+        <tr>
+          <td>Courses</td>
+        </tr>
+        <tr>
+          <%for(var index = 0; index < student.length; index++ ) { %>
+            <tr>
+              <td><a href="studentAssignments/<%= student[index].name %>" style="color: white;"><%= student[index].name %></a></td>
+            </tr>
+          <% } %>
+        </tr>
+      </table>
+</div>
 </body>
 </html>
