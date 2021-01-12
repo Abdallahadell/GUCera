@@ -5,6 +5,11 @@ body {
     color: #e7e7de;
 }
 
+hr {
+    background-color: white;
+    width: 17%;
+}
+
 .btn {
     color: #00587a;
     background-color: #e7e7de;
@@ -24,6 +29,9 @@ body {
 .topnav {
     background-color: #e7e7de;
     overflow: hidden;
+    position: sticky;
+    top: 0px;
+    width: 100%;
 }
 
 /* Style the links inside the navigation bar */
@@ -52,7 +60,7 @@ body {
 .table {
     color: #e7e7de;
     font-size: large;
-    padding-top: 100px;
+    padding-top: 50px;
     text-align: center;
     margin:0 auto;
 }

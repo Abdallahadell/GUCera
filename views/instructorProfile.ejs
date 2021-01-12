@@ -3,32 +3,6 @@
     <head>
         <title>issue certificate</title>
         <style>
-            .new{
-                background-color: #008891;
-                font-size: .80em;
-                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
-                color: #e7e7de;
-            }
-            .topnav a {
-                float: left;
-                color: #00587a;
-                text-align: center;
-                padding: 14px 12px;
-                text-decoration: none;
-                font-size: 14px;
-            }
-            .topnav {
-                background-color: grey;
-                overflow: hidden;
-            }.topnav a.active {
-                background-color: #6f9eaf;
-                color: #e7e7de;
-                pointer-events: none;
-            }
-            .topnav a:hover {
-                background-color: #008891;
-                color: #e7e7de;
-            }
             .dumbo{
                 margin-top: 5%;
                 text-align: center;
@@ -58,7 +32,8 @@
         <a href="/viewAssigninst">View assignment students</a>
         <a href="/IssueCertificate">Issue certificate</a>
         <a class="active" href="/instructorProfile">Profile</a>
-        <a href="/logout">Log out</a>
+        <a href="/logout" style="float: right;" class="logout">Log out</a>
+        <link rel="stylesheet" href="/css/instStyle.css">
     </div>
     <div class="dumbo">
         <label>First name :</label>
@@ -94,7 +69,7 @@
     <div id="myForm" style="display: none; text-align: center">
         <form method="POST" action="/addPhoneNumber">
         <label>Number :</label>
-        <input type="text" name="mobile_number" minlength="8" required>
+        <input type="text" name="mobile_number" maxlength="11" required>
         <br>
         <input type="submit" value="submit">
         </form>
@@ -102,8 +77,8 @@
 
     <script>
         function openPhonenumber(){
-    document.getElementById("myForm").style.display = "block";
-}
+            document.getElementById("myForm").style.display = "block";
+        }       
     </script>
 </body>
 </html>

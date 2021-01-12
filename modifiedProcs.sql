@@ -8,7 +8,7 @@ SELECT Course.id as 'Course ID', Course.name as 'Course Name', course.courseDesc
 		course.instructorId as 'Instructor ID', course.adminId as 'Admin ID' FROM Course  INNER JOIN Instructor ON Course.instructorId = Instructor.id 
 INNER JOIN Users ON Instructor.id = Users.id
 WHERE Course.id = @id
-
+END
 
 GO
 

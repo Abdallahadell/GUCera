@@ -3,41 +3,13 @@
     <head>
         <title>View Assign</title>
         <style>
-            .new{
-                background-color: #008891;
-                font-size: .80em;
-                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
-                color: #e7e7de;
-            }
-            .topnav a {
-                float: left;
-                color: #00587a;
-                text-align: center;
-                padding: 14px 12px;
-                text-decoration: none;
-                font-size: 14px;
-            }
             .post{
                 padding-top: 5%;
                 text-align: center;
                 text-decoration: black;
             }
             .table-data{ 
-            position: relative;
-            left: 35% 
-
-            } 
-            .topnav {
-                background-color: grey;
-                overflow: hidden;
-            }.topnav a.active {
-                background-color: #6f9eaf;
-                color: #e7e7de;
-                pointer-events: none;
-            }
-            .topnav a:hover {
-                background-color: #008891;
-                color: #e7e7de;
+                padding-left: 35% 
             }
         </style>
         <meta charset="UTF-8">
@@ -46,7 +18,8 @@
         <title>Instructor</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-      </head>
+        <link rel="stylesheet" href="/css/instStyle.css">
+    </head>
         <body class="new">
             <div class="topnav">
                 <a href="/instructor">Home</a>
@@ -59,7 +32,7 @@
                 <a class="active" href="/viewAssigninst">View assignment students</a>
                 <a href="/IssueCertificate">Issue certificate</a>
                 <a href="/instructorProfile">Profile</a>
-                <a href="/logout">Log out</a>
+                <a href="/logout" style="float: right;" class="logout">Log out</a>
             </div>
             <div class="post">
             <form method="POST" action="/viewAssigninst">
