@@ -326,7 +326,7 @@ app.get('/assignContent', async function(req,res){
     }
 });
 
-app.get('/viewGrades', async function(req, res){
+app.get('/viewGrade', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
         await conn.connect();
         var request = new mssql.Request(conn);
