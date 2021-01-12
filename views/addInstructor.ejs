@@ -2,44 +2,18 @@
 <html lang="en">
     <head>
         <title>Add instructor</title>
-        <style>
-            .new{
-                text-align: center;
-                background-color: #008891;
-                font-size: .80em;
-                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
-                color: #e7e7de;
-            }
-            .zoo{
-                margin-top: 5%;
-            }
-            .topnav {
-                background-color: grey;
-                overflow: hidden;
-            }.topnav a.active {
-                background-color: #6f9eaf;
-                color: #e7e7de;
-                pointer-events: none;
-            }
-            .topnav a:hover {
-                background-color: #008891;
-                color: #e7e7de;
-            }
-            .topnav a {
-                float: left;
-                color: #00587a;
-                text-align: center;
-                padding: 14px 12px;
-                text-decoration: none;
-                font-size: 14px;
-            }
-        </style>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Instructor</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/instStyle.css">
+        <style>
+            .zoo{
+                margin-top: 5%;
+            }
+        </style>
     </head>
     <body class="new">
         <div class="topnav">
@@ -53,7 +27,7 @@
             <a href="/viewAssigninst">View assignment students</a>
             <a href="/IssueCertificate">Issue certificate</a>
             <a href="/instructorProfile">Profile</a>
-            <a href="/logout">Log out</a>
+            <a href="/logout" style="float: right;" class="logout">Log out</a>
         </div>
         <div class="zoo">
             <form method="POST" action="/addInstructor">

@@ -5,6 +5,7 @@ const port = 3000;
 const path = require('path');
 const fs = require('fs');
 const session = require('express-session');
+const { request } = require('express');
 
 app.use(session({ secret: 'keyboard cat',resave:false,rolling:true,saveUninitialized:false, cookie: { maxAge: 180000}}));
 app.use(express.json());
@@ -84,7 +85,6 @@ app.get('/addFeedbacksForCourses/:name', async function(req, res){
         }
         conn.close();
         res.render('addFeedbacksForCourses', {data : queryResult.recordset[0]});
-        console.log(queryResult.recordset[0]);
     }
 })
 
@@ -117,9 +117,7 @@ app.get('/studentCertificate/:name', async function(req,res){
         }
         conn.close();
         queryResult.recordset[0].Sid = req.session.iid;
-        console.log(  queryResult.recordset)
         let output = await runProcedure(queryResult.recordset[0], 'viewCertificate', null);
-        console.log(queryResult.recordset[0])
         res.render('studentCertificate',{data: output.table[0]});
         }
     else{
@@ -194,13 +192,26 @@ app.get('/defineAssignment',async function(req,res){
     res.render('defineAssignment',{result:result.table[0]})
     }else{
     res.redirect('/login')
-}
+    }
 })
 
 app.get('/profile', async function (req, res){
     if(req.session.iid) {
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try{
+            request.input('id', req.session.iid);
+            var queryResult = await request.query("select mobileNumber from userMobileNumber where id = @id");
+            var queryCredit = await request.query("select c.* from creditCard c inner join StudentAddCreditCard sc on c.number = sc.creditCardNumber where sc.sid = @id")
+        } catch(err) {
+            console.log(err);
+        }
         let output = await runProcedure({"id" : req.session.iid}, "viewMyProfile");
-        res.render('profile', {data : output.table[0][0]});
+        for(key in list = queryCredit.recordset) {
+            var date = JSON.stringify(list[key].expiryDate).split("T")[0].substring(1).split("-");
+            list[key].expiryDate = date[2] + "/" + date[1] + "/" + date[0];
+        }
+        res.render('profile', {data : output.table[0][0], number : queryResult.recordset, details : queryCredit.recordset});
     }
 })
 
@@ -269,6 +280,10 @@ app.get('/studentAssignments/:name', async function(req, res){
         conn.close();
         queryResult.recordset[0].Sid = req.session.iid;
         let output = await runProcedure(queryResult.recordset[0], 'viewAssign', null);
+        for(key in list = output.table[0]) {
+            var date = JSON.stringify(list[key].deadline).split("T")[0].substring(1).split("-");
+            list[key].deadline = date[2] + "/" + date[1] + "/" + date[0];
+        }
         res.render('studentAssignments',{data: output.table[0]});
         }
     else{
@@ -311,7 +326,7 @@ app.get('/assignContent', async function(req,res){
     }
 });
 
-app.get('/viewGrade', async function(req, res){
+app.get('/viewGrades', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
         await conn.connect();
         var request = new mssql.Request(conn);
@@ -334,7 +349,6 @@ app.get('/instructorProfile',async function(req,res){
     procName="ViewInstructorProfile";
     var news = {instrId : req.session.iid }
     result = await runProcedure(news,procName)
-    console.log(result.table[0][0])
     res.render('instructorProfile',{result : result.table[0]})
     }else{
     res.redirect('/login')
@@ -430,6 +444,22 @@ app.get('/logout',function(req,res){
     req.session.destroy();
     res.redirect('/login');
 })
+
+app.get('/promocodes', async function(req, res) {
+    if(req.session.iid) {
+        req.body.sid = req.session.iid;
+        let output = await runProcedure(req.body, 'viewPromocode', null);
+        for(key in list = output.table[0]) {
+             var date = JSON.stringify(list[key].isuueDate).split("T")[0].substring(1).split("-");
+             list[key].isuueDate = date[2] + "/" + date[1] + "/" + date[0];
+             var date = JSON.stringify(list[key].expiryDate).split("T")[0].substring(1).split("-");
+             list[key].expiryDate = date[2] + "/" + date[1] + "/" + date[0];
+        }
+        res.render('listPromocodes', {details : output.table[0]});
+    } else {
+        res.redirect('/login');
+    }
+});
 
 app.post('/register', function(req, res) {
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
@@ -639,8 +669,8 @@ app.post("/addInstructor",function(req,res){
     }
 })
 
-app.post("/addPhoneNumber",function(req,res){
-    if(req.session.iid ){
+app.post("/addPhoneNumber", async function(req,res){
+    if(req.session.iid){
         req.session.touch;
         procName = "addMobile"
         var news = {ID : req.session.iid }
@@ -648,7 +678,7 @@ app.post("/addPhoneNumber",function(req,res){
             ...req.body,
             ...news
         }
-        runProcedure(enter,procName)
+        await runProcedure(enter,procName)
         if(req.session.type == 0){
             res.redirect('/instructorProfile')
         }
@@ -656,8 +686,26 @@ app.post("/addPhoneNumber",function(req,res){
             res.redirect('/profile')
         }
         }else{
-        res.redirect('/login')
+            res.redirect('/login')
         }
+})
+
+app.post("/removePhone", async function(req, res) {
+    if(req.session.iid){
+        req.session.touch();
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try {
+            request.input('id', req.session.iid);
+            request.input('remove', req.body.remove);
+            await request.query("delete from UserMobileNumber where id = @id and mobileNumber = @remove");
+        } catch (err) {
+            console.log(err);
+        }
+        res.redirect('/profile');
+    } else {
+        res.redirect('/login')
+    }
 })
 
 app.post("/updateCourseDescription",function(req,res){
@@ -671,9 +719,42 @@ app.post("/updateCourseDescription",function(req,res){
         }
         runProcedure(enter,procName)
         res.redirect('/instructor')
-        } else {
-            res.redirect('/login')
+    } else {
+        res.redirect('/login')
+    }
+})
+
+app.post("/addCreditCard", async function(req, res) {
+    if(req.session.iid) {
+        req.session.touch();
+        req.body.sid = req.session.iid;
+        req.body.cardHolderName = req.body.name;
+        delete req.body.name;
+        req.body.expiryDate = req.body.date;
+        delete req.body.date;
+        await runProcedure(req.body, 'addCreditCard', null);
+        res.redirect('/profile');
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.post("/removeCreditCard", async function(req, res) {
+    if(req.session.iid){
+        req.session.touch();
+        await conn.connect();
+        var request = new mssql.Request(conn);
+        try {
+            request.input('id', req.session.iid);
+            request.input('removeCard', req.body.removeCard);
+            await request.query("delete from StudentAddCreditCard where sid = @id and creditCardNumber = @removeCard");
+        } catch (err) {
+            console.log(err);
         }
+        res.redirect('/profile');
+    } else {
+        res.redirect('/login')
+    }
 })
 
 function runlogin(req,res){
@@ -753,28 +834,6 @@ async function runProcedure(body, proc, expected_outputs) {
             }
         }
     }
-}
-
-
-
-function runStudentRegister(req) {
-    conn.connect().then(function () {
-        var request = new mssql.Request(conn);
-        request.input('first_name', req.body.firstName);
-        request.input('last_name', req.body.lastName);
-        request.input('password', req.body.password);
-        request.input('email', req.body.email);
-        request.input('gender', req.body.gender);
-        request.input('address', req.body.address);
-        request.execute("studentRegister").then(function (recordSet) {
-            conn.close();
-        }).catch(function (err) {
-            console.log(err + " this is error1");
-            conn.close();
-        });
-    }).catch(function (err) {
-        console.log(err + " this is error2");
-    });
 }
 
 app.listen(port, () => {

@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .btn {
+            width: 15em;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,21 +35,23 @@
                 <input type="submit" id="simple_click" class="btn btn-secondary" value="Avaliable Courses"> <br> <br>
             </form>
             <form method = 'GET' action="/assignContent">
-                <input type="submit" id="simple_click" class="btn btn-secondary" value="View assignments content"> <br> <br>
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="View Assignments Content"> <br> <br>
             </form>
             <form method = 'GET' action="/submitAssign">
-                <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit assignment"> <br> <br>
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="Submit Assignment"> <br> <br>
             </form>
-            <form method = 'GET' action="/viewGrade">
-                <input type="submit" id="simple_click" class="btn btn-secondary" value="View grades"> <br> <br>
+            <form method = 'GET' action="/viewGrades">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="View Grades"> <br> <br>
             </form>
             <form method = 'GET' action="/addFeedback">
-                <input type="submit" id="simple_click" class="btn btn-secondary" value="Add feedback"> <br> <br>
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="Add Feedback"> <br> <br>
             </form>
             <form method = 'GET' action="/listCert">
-                <input type="submit" id="simple_click" class="btn btn-secondary" value="List certificates"> <br>
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="List Certificates"> <br> <br>
             </form>
-        
+            <form method = "GET" action="/promocodes">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="List Promocodes"> <br>
+            </form>
     </div>
 </body>
 </html>
