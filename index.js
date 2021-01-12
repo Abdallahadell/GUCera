@@ -93,7 +93,7 @@ app.get('/listCert', async function(req, res){
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
-            var studQuery = await request.query("select c.name from course c ");
+            var studQuery = await request.query("select c.name from course c inner join assignment a on c.id = a.cid group by c.name ");
         } catch(err){
             console.log(err);
         }
@@ -349,7 +349,7 @@ app.get('/instructorProfile',async function(req,res){
     procName="ViewInstructorProfile";
     var news = {instrId : req.session.iid }
     result = await runProcedure(news,procName)
-    res.render('instructorProfile',{result : result.table[0]})
+    res.render('instructorProfile',{result : result.table[0][0]})
     }else{
     res.redirect('/login')
     }
