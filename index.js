@@ -5,6 +5,7 @@ const port = 3000;
 const path = require('path');
 const fs = require('fs');
 const session = require('express-session');
+const { query } = require('express');
 
 app.use(session({ secret: 'keyboard cat',resave:false,rolling:true,saveUninitialized:false, cookie: { maxAge: 180000}}));
 app.use(express.json());
@@ -432,11 +433,11 @@ function runlogin(req,res){
                     conn.close();
                 }
                 else if(done.output.type == 1){
-                    res.redirect('/Admin');
+                    res.redirect('/admin');
                     conn.close();
                 }
                 else if(done.output.type==2){
-                    res.redirect('/Student');
+                    res.redirect('/student');
                     conn.close();
                 }
             }
@@ -481,7 +482,6 @@ async function runProcedure(body, proc, expected_outputs) {
             try {
                 let recordSet = await request.execute(inputs[input][0]);
                 conn.close();
-                console.log(recordSet)
                 var result = {
                     table : recordSet.recordsets ,
                     output : recordSet.output
@@ -521,6 +521,114 @@ function runStudentRegister(req) {
         console.log(err + " this is error2");
     });
 }
+
+app.get('/admin', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        res.render('admin/landing');
+    }
+    else{
+        console.log('ewla3')
+        res.render('login')
+    }
+})
+app.get('/admin/courses', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        let output = await runProcedure(null, 'AdminViewAllCourses', null);
+        res.render('admin/courses', {data : output.table[0]});
+    }
+})
+
+app.get('/admin/courseDetails/:cname', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        cname = req.params.cname;
+        await conn.connect();
+        request = new mssql.Request(conn);
+        try{
+            request.input('cname', cname);
+            var query = await request.query('select id from Course where name = @cname');
+        }
+        catch(err){
+            console.log(err);
+        }
+        let output = await runProcedure( {"courseId": query.recordset[0].id}, 'AdminViewCourseDetails', null);
+        res.render('admin/courseDetails', {data : output.table[0][0]});
+    }
+})
+
+app.post('/admin/accept/:cname', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        cname = req.params.cname;
+        req.body.adminid = req.session.iid;
+        await conn.connect();
+        request = new mssql.Request(conn);
+        try{
+            request.input('cname', cname);
+            var query = await request.query('select id from Course where name = @cname');
+        }
+        catch(err){
+            console.log(err);
+        }
+        req.body.courseId = query.recordset[0].id
+        await runProcedure(req.body, 'AdminAcceptRejectCourse');
+        res.redirect('/admin');
+    }
+})
+
+app.get('/admin/add_promocode', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        res.render('admin/addPromo');
+    }
+})
+
+
+app.post('/admin/add_promocode', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        await conn.connect();
+        request = new mssql.Request(conn);
+        req.body.adminId = req.session.iid
+        try{
+            let output = await runProcedure(req.body, 'AdminCreatePromocode', null);
+        }
+        catch(err){
+            console.log(err);
+        }
+        res.redirect('/admin');
+    }
+})
+
+app.get('/admin/view_students', async function (req, res){
+    if(req.session.iid && req.session.type == 1){
+        await conn.connect();
+        request = new mssql.Request(conn);
+        try{
+            let query = await request.query('select Users.id, firstName, lastName from Student INNER JOIN Users on Student.id = Users.id');
+        }
+        catch(err){
+            console.log(err);
+        }
+        for(data in query.recordsets){
+            for(row in query.recordsets[data]){
+                console.log(query.recordset[data])
+                console.log("wut")
+            }
+        }
+        res.render('admin/viewStudents', {data: query.recordsets});
+    }
+
+})
+
+app.get('/admin/student_details/:sid', async function (req, res){
+    if(req.session.iid && req.session.type == 1){
+        let output = await runProcedure({"sid": req.params.sid}, AdminViewStudentProfile)
+        res.render('admin/studentDetails', {data: query.recordset[0]} );
+    }
+})
+
+app.post('/admin/issue_code/:sid', async function(req, res){
+    if(req.session.iid && req.session.type == 1){
+        
+    }
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
