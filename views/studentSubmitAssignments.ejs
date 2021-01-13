@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grades</title>
+    <title>studentSubmitAssignments</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <link rel="stylesheet" href="/css/style.css">
@@ -16,18 +16,18 @@
     <a href="/viewGrade">Grades</a>
     <a class="logout" href="/logout" style="float: right;">Logout</a>
 </div>
-<form action="/viewTheGrade/<%= cid %> " method="POST" id="enForm">
-    <select name="assign" id="assignType">
-      <% for( let index = 0; index < Assignment.length; index++ ) { %>
-        <option value="<%=Assignment[index].assignType%>^<%=Assignment[index].assignnumber%>"><%=Assignment[index].assignType%> <%=Assignment[index].assignnumber%></option>
-      <% } %>
-    </select> <br><br>
-    <input type="submit" class="btn btn-secondary">
-  </form>
-  <script>
-    if('<%=assigned%>'=='true') {
-      document.getElementById("enForm").remove();
-    }
-  </script>
+    <form action="/submit/<%= cid %> " method="POST" id="enForm">
+        <select name="assign" id="assignType">
+          <% for( let index = 0; index < Assignment.length; index++ ) { %>
+            <option value="<%=Assignment[index].assignType%>^<%=Assignment[index].assignnumber%>"><%=Assignment[index].assignType%> <%=Assignment[index].assignnumber%></option>
+          <% } %>
+        </select> <br><br>
+        <input type="submit" class="btn btn-secondary">
+      </form>
+      <script>
+        if('<%=assigned%>'=='true') {
+          document.getElementById("enForm").remove();
+        }
+      </script>
 </body>
 </html>

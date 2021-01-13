@@ -1,12 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Update course description</title>
-        <style>
-            .zoo{
-                margin-top: 5%;
-            }
-        </style>
+        <title>Add instructor</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -14,15 +9,20 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="/css/instStyle.css">
+        <style>
+            .zoo{
+                margin-top: 5%;
+            }
+        </style>
     </head>
     <body class="new">
         <div class="topnav">
             <a href="/instructor">Home</a>
             <a href="addcourse">Add course</a>
             <a href="defineAssignment">Add assesment</a>
-            <a href="/addInstructor">Add instructor</a>
+            <a class="active"  href="/addInstructor">Add instructor</a>
             <a href="/updateContent">Content</a>
-            <a class="active" href="/updateCourseDescription">Course description</a>
+            <a href="/updateCourseDescription">Course description</a>
             <a href="/viewFeedback">View student feedback</a> 
             <a href="/viewAssigninst">View assignment students</a>
             <a href="/IssueCertificate">Issue certificate</a>
@@ -30,8 +30,8 @@
             <a href="/logout" style="float: right;" class="logout">Log out</a>
         </div>
         <div class="zoo">
-            <form method="POST" action="/updateCourseDescription">
-            Course :<select id="courseId" name="courseId" required>
+            <form method="POST" action="/addInstructor">
+            Course :<select id="cid" name="cid" required>
                 <option selected value='0'>Choose a course</option>
                 <%   
                 for(i = 0 ; i < result1.length ; i++) {
@@ -41,11 +41,11 @@
             </select>
             <br>
             <br>
-            <label>  Description :</label> 
-            <input id="courseDescription" name="courseDescription" type="text" value="" maxlength="200">
+            <label>  ID :</label> 
+            <input id="insid" name="insid" type="number" value="" min='1'>
             <br>
             <br>
-            <input id="Button2"  type="submit" value="Update">
+            <input id="Button2"  type="submit" value="Add">
             </form>
         </div>
     </body>

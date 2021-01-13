@@ -12,10 +12,11 @@
 
 <body>
   <div class="topnav">
-    <a href="student">Home</a>
-    <a href="courses" class = "active">Courses</a>
-    <a href="profile">My Profile</a>
-    <a href="#about">About</a>
+    <a href="/student">Home</a>
+    <a href="/courses" class = "active">Courses</a>
+    <a href="/profile">My Profile</a>
+    <a href="/viewGrade">Grades</a>
+    <a class="logout" href="/logout" style="float: right;">Logout</a>
 </div>
     </div>
     <div class="container">
@@ -27,12 +28,13 @@
               <td>Name</td>
             </tr>
             <tr>
-              <% for( let index = 0; index < data.length; index++ ) { %>
-                <tr><td><%= data[index].name %> </td></tr>
+              <%for(var index = 0; index < data.length; index++ ) { %>
+                <tr>
+                  <td><a href="courseDetails/<%= data[index].name %>" style="color: white;"><%= data[index].name %></a></td>
+                </tr>
               <% } %>
             </tr>
           </table>
     </div>
-    
 </body>
 </html>

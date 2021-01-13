@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/student">Home</a>
+        <a href="/courses" class="active">Courses</a>
+        <a href="/profile">My Profile</a>
+        <a href="/viewGrade">Grades</a>
+        <a class="logout" href="/logout" style="float: right;">Logout</a>
+    </div>
+    <div class="container">
+        <h1>Course Details</h1>
+    </div>
+    <div class="table" style="padding-top: 20px;">
+        <table cellspacing=10px>
+          <% for(key in data) { %>
+            <tr>
+              <td><%=key%></td>
+              <td><%=data[key]%></td>
+            </tr>
+          <%}%>
+        </table>
+        <form action="/enroll/<%= data["Course ID"] %>" method="POST" id="enForm">
+          <select name="instr" id="instr">
+            <% for( let index = 0; index < instructor.length; index++ ) { %>
+              <option value="<%=instructor[index].insid%>"><%=instructor[index].name%></option>
+            <% } %>
+          </select> <br><br>
+          <input type="submit" class="btn btn-secondary" value="Enroll">
+        </form>
+    </div>
+    <script>
+      if('<%=enrolled%>'=='true') {
+        document.getElementById("enForm").remove();
+      }
+    </script>
+</body>
+</html>

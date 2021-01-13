@@ -10,25 +10,37 @@
     </head>
     <body>
         <div class="topnav">
-            <a href="student">Home</a>
-            <a href="courses">Courses</a>
-            <a href="profile">My Profile</a>
-            <a href="#about">About</a>
+            <a href="/student">Home</a>
+            <a href="/courses">Courses</a>
+            <a href="/profile">My Profile</a>
+            <a href="/viewGrade">Grades</a>
+            <a class="logout" href="/logout" style="float: right;">Logout</a>
         </div>
         <div class="container">
             <h1>Your certificates</h1>
         </div>
-        <div class = "table">
+        <div class = "table" >
             <table cellspacing=10px>
                 <tr>
-                <td>Course id : </td>
-                <td><%=data.cid%></td>
-                </tr>  
-                <tr>
-                    <td>Issue date : </td>
-                    <td><%=data.issueDate%></td>
-                </tr> 
+                    <td>
+                        Student ID
+                    </td>
+                    <td>
+                        Course ID
+                    </td>
+                    <td>
+                        Issue Date
+                    </td>
+                </tr>
+                 <%for(var index = 0; index < data.length; index++ ) { %>
+                    <tr>  
+                    <% for(var key in data[index]){ %> 
+                      <td><%=data[index][key]%></td>
+                    <% } %> 
+                    </tr>
+                  <% } %>
             </table>
         </div>
+       
     </body>
 </html>

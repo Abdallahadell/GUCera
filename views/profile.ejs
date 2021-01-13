@@ -8,45 +8,189 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
+    <style>
+      .number {
+        height: 30px;
+        width: 100px;
+        font-size: 0.7em;
+        line-height: 0.6em;
+      }
+
+      .addNumberForm {
+        visibility: hidden;
+      }
+
+      .numberText {
+        height: 30px;
+        width: 90px;
+        font-size: 0.7em;
+        visibility: inherit;
+      }
+      
+      .numberForm {
+        height: 30px;
+        width: 50px;
+        font-size: 0.6em;
+        padding-left: 6px;
+        line-height: 0.6em;
+        visibility: inherit;
+      }
+
+      .remove {
+        height: 10px;
+        width: 20px;
+        padding-left: 5px;
+        padding-top: 1px;
+        line-height: 0.01em;
+      }
+
+      .creditCard {
+        height: 30px;
+        width: 150px;
+        font-size: 0.7em;
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
       <div class="topnav">
-          <a href="student">Home</a>
-          <a href="courses">Courses</a>
-          <a href="profile" class = "active">My Profile</a>
-          <a href="#about">About</a>
+          <a href="/student">Home</a>
+          <a href="/courses">Courses</a>
+          <a href="/profile" class = "active">My Profile</a>
+          <a href="/viewGrade">Grades</a>
+          <a class="logout" href="/logout" style="float: right;">Logout</a>
       </div>
       <div class="container">
           <h1>Your Profile</h1>
       </div>
       <div class="table">
-          <table cellspacing=10px>
-              <tr>
-                <td>first name </td>
-                <td><%=data.firstName%></td>
-              </tr>
-              <tr>
-                <td>last name </td>
-                <td><%=data.lastName%></td>
-              </tr>
-              <tr>
-                <td>gender </td>
-                  <% if(data.gender.readInt8()==0){data.gender="Male"} else {data.gender="Female"} %>
-                <td><%=data.gender%></td>
-              </tr>
-              <tr>
-                <td>email </td>
-                <td><%=data.email%></td>
-              </tr>
-              <tr>
-                <td>address </td>
-                <td><%=data.address%></td>
-              </tr>
-              <tr>
-                <td>gpa </td>
-                <td><%=data.gpa%></td>
-              </tr>
-            </table>
+          <table >
+            <tr>
+              <td>First Name </td>
+              <td><%=data.firstName%></td>
+            </tr>
+            <tr>
+              <td>Last Name </td>
+              <td><%=data.lastName%></td>
+            </tr>
+            <tr>
+              <td>Gender </td>
+                <% if(data.gender.readInt8()==0){data.gender="Male"} else {data.gender="Female"} %>
+              <td><%=data.gender%></td>
+            </tr>
+            <tr>
+              <td>Email </td>
+              <td><%=data.email%></td>
+            </tr>
+            <tr>
+              <td>Address </td>
+              <td><%=data.address%></td>
+            </tr>
+            <tr>
+              <td>Gpa </td>
+              <td><%=data.gpa%></td>
+            </tr>
+            <tr>
+              <td style="vertical-align : middle;text-align:center;" id="insertHere">
+                Mobile Number(s) <br> 
+                <button class="btn btn-secondary number" id="addNumberButton" onclick="addNumber()">Add Number</button>
+              </td>
+              <td>
+                <% for( let index = 0; index < number.length; index++ ) { %>
+                <%=number[index].mobileNumber%> 
+                <form action="/removePhone" method="POST" style="display: inline;">
+                  <input type="hidden" value="<%= number[index].mobileNumber %> "  name="remove">
+                  <input type="submit" class="btn btn-secondary remove" value="-">
+                </form> <br>
+                <% } %>
+              </td>
+            </tr>
+          </table>
+          <hr>
+          <br>
+          <button id="payment" class="btn btn-secondary" style="width: 130px; font-size: 10px; margin-bottom: 10px;" onclick="paymentTable()">View Payment Details</button>
+          <table id="tablePayment" style="display: none;">
+            <tr>
+              <td>Credit Card Number</td>
+              <td>Card Holder Name</td>
+              <td>Expiry Date</td>
+              <td>CVV</td>
+            </tr>
+            <% if (details.length != 0) { %>
+              <% for( let index = 0; index < details.length; index++ ) { %>
+                <tr>
+                <% for(key in details[index]) {%>
+                  <td><%=details[index][key]%></td>
+                <% } %>
+                <td style="border-top: hidden;">
+                  <form action="/removeCreditCard" method="POST" style="display: inline;">
+                    <input type="hidden" value="<%= details[index].number %>"  name="removeCard">
+                    <input type="submit" class="btn btn-secondary remove" value="-">
+                  </form>
+                </td>
+                </tr>
+              <% } %>
+            <% } %>
+            <tr>
+          <form action="/addCreditCard" method="POST">
+              <td><input type="text" class="creditCard" name="number" maxlength="15" required></td>
+              <td><input type="text" class="creditCard" name="name" maxlength="16" required></td>
+              <td><input type="datetime" class="creditCard" name="date" placeholder="mm/dd/yy"></td>
+              <td><input type="text" class="creditCard" name="cvv" maxlength="3" required></td>
+            </tr>
+          </table>
+            <br><input id="creditSubmit" type="submit" class="btn btn-secondary numberForm" style="visibility: hidden;"> 
+          </form>
+          <button class="btn btn-secondary" id="addCreditCard" onclick="addCreditCard()" style="visibility: hidden; margin: 0 54px 20px 0;">Add Credit Card</button>
       </div>
+      <script>
+        function addNumber() {
+            document.getElementById("addNumberButton").remove();
+            var form = document.createElement("FORM");
+            form.setAttribute("action", "/addPhoneNumber");
+            form.setAttribute("method", "POST");
+            form.setAttribute("class", "addNumberForm");
+            form.setAttribute("id", "addNumberForm");
+            var text = document.createElement("INPUT");
+            text.setAttribute("type", "text");
+            text.setAttribute("name", "mobile_number");
+            text.setAttribute("class", "numberText");
+            text.setAttribute("maxlength", "11");
+            text.required = true;
+            var submit = document.createElement("INPUT");
+            submit.setAttribute("type", "submit");
+            submit.setAttribute("class", "btn btn-secondary numberForm");
+            form.appendChild(text);
+            form.appendChild(submit);
+            document.getElementById("insertHere").appendChild(form);
+            document.getElementById("addNumberForm").style.visibility = 'visible';
+        }
+        
+        function paymentTable() {
+          if(document.getElementById("payment").innerText == "View Payment Details"){
+            document.getElementById("payment").innerText = "Hide Payment Details";
+            document.getElementById("tablePayment").style.display = 'table';
+            if(typeof(document.getElementById("addCreditCard")) != 'undefined' && document.getElementById("addCreditCard") != null)
+              document.getElementById("addCreditCard").style.visibility = 'visible';
+            else
+              document.getElementById("creditSubmit").style.visibility = 'visible';
+          } else {
+            document.getElementById("payment").innerText = "View Payment Details";
+            document.getElementById("tablePayment").style.display = 'none';
+            if(typeof(document.getElementById("addCreditCard")) != 'undefined' && document.getElementById("addCreditCard") != null)
+              document.getElementById("addCreditCard").style.visibility = 'hidden';
+            else
+              document.getElementById("creditSubmit").style.visibility = 'hidden';
+          }
+        }
+
+        function addCreditCard() {
+          document.getElementById("addCreditCard").remove();
+          document.getElementById("creditSubmit").style.visibility = 'visible';
+          for(element in document.getElementsByClassName("creditCard")) {
+            document.getElementsByClassName("creditCard")[element].style.visibility = 'visible';
+          }
+        }
+    </script>
     </body>
   </html>

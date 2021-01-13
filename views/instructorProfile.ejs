@@ -3,37 +3,14 @@
     <head>
         <title>issue certificate</title>
         <style>
-            .new{
-                background-color: #008891;
-                font-size: .80em;
-                font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
-                color: #e7e7de;
-            }
-            .topnav a {
-                float: left;
-                color: #00587a;
-                text-align: center;
-                padding: 14px 16px;
-                text-decoration: none;
-                font-size: 17px;
-            }
-            .topnav {
-                background-color: grey;
-                overflow: hidden;
-            }.topnav a.active {
-                background-color: #6f9eaf;
-                color: #e7e7de;
-                pointer-events: none;
-            }
-            .topnav a:hover {
-                background-color: #008891;
-                color: #e7e7de;
-            }
             .dumbo{
                 margin-top: 5%;
                 text-align: center;
                 font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
                 color: #e7e7de;
+            }
+            .sod{
+                padding-right: 5px;
             }
         </style>
         <meta charset="UTF-8">
@@ -48,40 +25,60 @@
         <a href="/instructor">Home</a>
         <a href="addcourse">Add course</a>
         <a href="defineAssignment">Add assesment</a>
+        <a href="/addInstructor">Add instructor</a>
         <a href="/updateContent">Content</a>
         <a href="/updateCourseDescription">Course description</a>
         <a href="/viewFeedback">View student feedback</a> 
         <a href="/viewAssigninst">View assignment students</a>
         <a href="/IssueCertificate">Issue certificate</a>
         <a class="active" href="/instructorProfile">Profile</a>
-        <a href="/logout">Log out</a>
+        <a href="/logout" style="float: right;" class="logout">Log out</a>
+        <link rel="stylesheet" href="/css/instStyle.css">
     </div>
     <div class="dumbo">
         <label>First name :</label>
-        <span><%=result.firstName  %> </span>
+        <span><%=result[0].firstName  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Last name :</label>
-        <span><%=result.lastName  %> </span>
+        <span><%=result[0].lastName  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Gender :</label>
-        <span><%=result.gender  %> </span>
+        <% if(result[0].gender.readInt8()==0){result[0].gender="Male"} else {result[0].gender="Female"} %>
+        <span><%=result[0].gender  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Email :</label>
-        <span><%=result.email  %> </span>
+        <span><%=result[0].email  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Address :</label>
-        <span><%=result.address  %> </span>
+        <span><%=result[0].address  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Rating :</label>
-        <span><%=result.rating  %> </span>
+        <span><%=result[0].rating  %> </span>
         <br style="-webkit-user-select: auto;">
         <label>Email :</label>
-        <span><%=result.email  %> </span>
+        <span><%=result[0].email  %> </span>
         <br style="-webkit-user-select: auto;">
-        <label>Mobile number :</label>
-        <span><%=result.mobileNumber  %> </span>
+        <% for(i=0;i<result.length;i++) {%> 
+        <label class="sod">Mobile number <%=[i+1] %>  :</label>             
+        <span><%=result[i].mobileNumber  %> </span>
+        <br>
+        <% } %> 
         <br style="-webkit-user-select: auto;">
+        <button class="open-button" onclick="openPhonenumber()">Add number</button>
+    </div>
+    <div id="myForm" style="display: none; text-align: center">
+        <form method="POST" action="/addPhoneNumber">
+        <label>Number :</label>
+        <input type="text" name="mobile_number" minlength="8" maxlength="11" required>
+        <br>
+        <input type="submit" value="submit">
+        </form>
     </div>
 
+    <script>
+        function openPhonenumber(){
+            document.getElementById("myForm").style.display = "block";
+        }       
+    </script>
 </body>
 </html>
