@@ -1,0 +1,9 @@
+{
+    "user": "team22",
+    "password": "csen5012020~",
+    "server": "team22.database.windows.net",
+    "database": "GUCera",
+    "options": {
+        "encrypt": true
+    }
+}
