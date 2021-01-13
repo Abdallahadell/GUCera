@@ -349,7 +349,7 @@ app.get('/instructorProfile',async function(req,res){
     procName="ViewInstructorProfile";
     var news = {instrId : req.session.iid }
     result = await runProcedure(news,procName)
-    res.render('instructorProfile',{result : result.table[0][0]})
+    res.render('instructorProfile',{result : result.table[0]})
     }else{
     res.redirect('/login')
     }
