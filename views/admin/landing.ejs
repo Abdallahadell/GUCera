@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Admin</title>
+        <style>
+        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Instructor</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        ntegrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+<body class="new">
+    <div class="topnav">
+        <a class="active" href="/admin">Home</a>
+    </div>
+    <div class="cont">
+        <form method = 'GET' action='/admin'></form>
+            <form method="GET" action="/admin/courses">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="See All Courses"> <br> <br>
+            </form>
+            <form method = 'GET' action="/admin/requested_courses">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="See Requested Courses"> <br> <br>
+            </form>
+            <form method = 'GET' action="/admin/view_students">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="See All Students"> <br> <br>
+            </form>
+            <form method = 'GET' action="/admin/add_promocode">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="Create A Promocode"> <br> <br>
+            </form>
+            <form method = 'GET' action="/admin/issue_promocode">
+                <input type="submit" id="simple_click" class="btn btn-secondary" value="Issue A Promocode"> <br> <br>
+            </form>
+    </div>
+</body>
+</html>
