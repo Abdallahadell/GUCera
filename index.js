@@ -165,7 +165,7 @@ app.get('/assignContent', async function(req,res){
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
-            var studQuery = await request.query("select c.name from course c inner join studentTakeCourse s on c.id = s.cid");
+            var studQuery = await request.query("select distinct c.name from course c inner join studentTakeCourse s on c.id = s.cid");
         } catch(err){
             console.log(err);
         }
@@ -492,10 +492,6 @@ app.get('/promocodes', async function(req, res) {
         res.render('accessDenied');
     }
 });
-
-app.get('*', function(req, res) {
-    res.render('notFound');
-})
 
 app.post('/register', function(req, res) {
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
@@ -882,7 +878,8 @@ app.get('/admin', async function (req, res){
     else{
         res.redirect('/login')
     }
-})
+});
+
 app.get('/admin/courses', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
         let output = await runProcedure(null, 'AdminViewAllCourses', null);
@@ -891,7 +888,7 @@ app.get('/admin/courses', async function (req, res){
     else{
         res.redirect('/login');
     }
-})
+});
 
 app.get('/admin/courseDetails/:cname', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
@@ -911,7 +908,7 @@ app.get('/admin/courseDetails/:cname', async function (req, res){
     else{
         res.redirect('/login');
     }
-})
+});
 
 app.post('/admin/accept/:cname', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
@@ -933,7 +930,7 @@ app.post('/admin/accept/:cname', async function (req, res){
     else{
         res.redirect('/login');
     }
-})
+});
 
 app.get('/admin/add_promocode', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
@@ -942,7 +939,7 @@ app.get('/admin/add_promocode', async function (req, res){
     else{
         res.redirect('/login');
     }
-})
+});
 
 
 app.post('/admin/add_promocode', async function (req, res){
@@ -961,7 +958,7 @@ app.post('/admin/add_promocode', async function (req, res){
     else{
         res.redirect('/login');
     }
-})
+});
 
 app.get('/admin/view_students', async function (req, res){
     if(req.session.iid && req.session.type == 1){
@@ -980,8 +977,7 @@ app.get('/admin/view_students', async function (req, res){
     else{
         res.redirect('/login');
     }
-
-})
+});
 
 app.get('/admin/student_details/:sid', async function (req, res){
     if(req.session.iid && req.session.type == 1){
@@ -992,7 +988,7 @@ app.get('/admin/student_details/:sid', async function (req, res){
     else{
         res.redirect('/login');
     }
-})
+});
 
 app.get("/admin/issue_promocode", async function(req, res){
     if(req.session.iid && req.session.type == 1){
@@ -1001,7 +997,17 @@ app.get("/admin/issue_promocode", async function(req, res){
     else{
         res.redirect('/login');
     }
-})
+});
+
+app.get('/admin/requested_courses', async function (req, res){
+    if(req.session.iid && req.session.type == 1) {
+        let output = await runProcedure(null, 'AdminViewNonAcceptedCourses', null);
+        res.render('admin/requestedCourses', {data : output.table[0]});
+    }
+    else{
+        res.redirect('/login');
+    }
+});
 
 app.post("/admin/issue_promocode", async function(req, res){
     if(req.session.iid && req.session.type == 1){
@@ -1017,6 +1023,10 @@ app.post("/admin/issue_promocode", async function(req, res){
     else{
         res.redirect('/login');
     }
+});
+
+app.get('*', function(req, res) {
+    res.render('notFound');
 })
 
 app.listen(process.env.PORT || 3000, 
