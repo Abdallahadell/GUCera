@@ -596,7 +596,7 @@ app.post('/addingCourse',function(req,res){
             ...news
         }
         runProcedure(enter,procName)
-        res.redirect('/updateCourseDescription')
+        res.redirect('/instructor')
     } else {
         res.render('accessDenied');
     }
