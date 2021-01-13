@@ -465,7 +465,7 @@ app.get('/addInstructor', async function(req,res){
         procName="InstructorViewTeachingCourse";
         var news = {instrId : req.session.iid }
         result1 = await runProcedure(news,procName)
-        res.render('addinstructor',{result1:result1.table[0]})
+        res.render('addInstructor',{result1:result1.table[0]})
     } else {
         res.render('accessDenied');
     }
@@ -883,6 +883,21 @@ app.get('/admin', async function (req, res){
 app.get('/admin/courses', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
         let output = await runProcedure(null, 'AdminViewAllCourses', null);
+        for (var data in output.table[0]){
+            for(var row in output.table[0][data]){
+                if(output.table[0][data][row] === null){
+                    if(row.localeCompare("accepted") == 0){
+                        output.table[0][data][row] = false;
+                    }
+                    else if(row.localeCompare("content") == 0){
+                        output.table[0][data][row] = "N/A";
+                    }
+                }
+                
+            }
+            
+        }
+        console.log(output.table[0]);
         res.render('admin/courses', {data : output.table[0]});
     }
     else{
@@ -903,6 +918,16 @@ app.get('/admin/courseDetails/:cname', async function (req, res){
             console.log(err);
         }
         let output = await runProcedure( {"courseId": query.recordset[0].id}, 'AdminViewCourseDetails', null);
+        for (var row in output.table[0][0]){
+            if(output.table[0][0][row] == null){
+                if(row.localeCompare("accepted") == 0){
+                    output.table[0][0][row]= false;
+                }
+                else if(row.localeCompare("content") == 0){
+                    output.table[0][0][row] = "N/A";
+                }
+            }
+        }
         res.render('admin/courseDetails', {data : output.table[0][0]});
     }
     else{
