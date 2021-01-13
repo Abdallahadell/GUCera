@@ -897,7 +897,6 @@ app.get('/admin/courses', async function (req, res){
             }
             
         }
-        console.log(output.table[0]);
         res.render('admin/courses', {data : output.table[0]});
     }
     else{
@@ -991,7 +990,6 @@ app.get('/admin/view_students', async function (req, res){
         var request = new mssql.Request(conn);
         try{
             var query = await request.query('select Users.id, firstName, lastName from Student INNER JOIN Users on Student.id = Users.id');
-            console.log(query);
         }
         catch(err){
             console.log(err);
@@ -1027,6 +1025,20 @@ app.get("/admin/issue_promocode", async function(req, res){
 app.get('/admin/requested_courses', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
         let output = await runProcedure(null, 'AdminViewNonAcceptedCourses', null);
+        for (var data in output.table[0]){
+            for(var row in output.table[0][data]){
+                if(output.table[0][data][row] === null){
+                    if(row.localeCompare("accepted") == 0){
+                        output.table[0][data][row] = false;
+                    }
+                    else if(row.localeCompare("content") == 0){
+                        output.table[0][data][row] = "N/A";
+                    }
+                }
+                
+            }
+            
+        }
         res.render('admin/requestedCourses', {data : output.table[0]});
     }
     else{
