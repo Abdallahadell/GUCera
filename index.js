@@ -21,7 +21,15 @@ var config = JSON.parse(read);
 var conn = new mssql.ConnectionPool(config);
 
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    if(req.session.type == 0) {
+        res.redirect('/admin');
+    } else if(req.session.type == 1) {
+        res.redirect('/instructor');
+    } else if(req.session.type == 2) {
+        res.redirect('/student');
+    } else {
+        res.redirect('/login'); 
+    }
 });
 
 app.get('/login', function(req, res) {
@@ -34,30 +42,32 @@ app.get('/registration', function(req, res) {
 
 app.get('/student', function(req, res) {
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         res.render('student');
-    } else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/submitAssign', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
-        try{
+        try {
             var studQuery = await request.query("select c.name from course c");
-        } catch(err){
+        } catch(err) {
             console.log(err);
         }
         res.render('submitAssign', {student :studQuery.recordset});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.get('/addFeedback', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -66,14 +76,14 @@ app.get('/addFeedback', async function(req, res){
             console.log(err);
         }
         res.render('addFeedback', {student :studQuery.recordset});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/addFeedbacksForCourses/:name', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try {
@@ -85,11 +95,14 @@ app.get('/addFeedbacksForCourses/:name', async function(req, res){
         }
         conn.close();
         res.render('addFeedbacksForCourses', {data : queryResult.recordset[0]});
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.get('/listCert', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -98,14 +111,14 @@ app.get('/listCert', async function(req, res){
             console.log(err);
         }
         res.render('listCertificates', {student :studQuery.recordset});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.get('/studentCertificate/:name', async function(req,res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -119,14 +132,14 @@ app.get('/studentCertificate/:name', async function(req,res){
         queryResult.recordset[0].Sid = req.session.iid;
         let output = await runProcedure(queryResult.recordset[0], 'viewCertificate', null);
         res.render('studentCertificate',{data: output.table[0]});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
-})
+});
   
 app.get('/studentViewAssignGrade/:name', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try {
@@ -141,11 +154,14 @@ app.get('/studentViewAssignGrade/:name', async function(req, res){
         }
         conn.close();
         res.render('studentviewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/assignContent', async function(req,res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -154,49 +170,49 @@ app.get('/assignContent', async function(req,res){
             console.log(err);
         }
         res.render('viewAssign', {student :studQuery.recordset});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.get('/instructor',function(req,res){
     if(req.session.iid && (req.session.type == 0)){
         req.session.touch;
-        res.render('instructor')
-        }else{
-        res.redirect('/login')
-        }
-})
+        res.render('instructor');
+    } else {
+        res.render('accessDenied');
+    }
+});
 
 app.get('/addCourse', function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    res.render('addingCourse')
-    }else{
-    res.redirect('/login')
-}
-})
+        req.session.touch;
+        res.render('addingCourse');
+    } else {
+        res.render('accessDenied');
+    }
+});
 
 app.get('/defineAssignment',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName="InstructorViewTeachingCourse";
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        req.session.touch;
+        conn.connect();
+        procName="InstructorViewTeachingCourse";
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        result = await runProcedure(enter,procName)
+        res.render('defineAssignment',{result:result.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-    result = await runProcedure(enter,procName)
-    res.render('defineAssignment',{result:result.table[0]})
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.get('/profile', async function (req, res){
-    if(req.session.iid) {
+    if(req.session.iid && req.session.type == 2) {
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -212,18 +228,24 @@ app.get('/profile', async function (req, res){
             list[key].expiryDate = date[2] + "/" + date[1] + "/" + date[0];
         }
         res.render('profile', {data : output.table[0][0], number : queryResult.recordset, details : queryCredit.recordset});
-    }
-})
+    } else {
+        res.render('accessDenied');
+    } 
+});
 
 app.get('/courses', async function (req, res){
     if(req.session.iid && req.session.type == 2) {
+        req.session.touch();
         let output = await runProcedure(null, 'availableCourses', null);
         res.render('courses', {data : output.table[0]});
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.get('/courseDetails/:cname', async function (req, res) {
     if(req.session.iid) {
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -244,11 +266,14 @@ app.get('/courseDetails/:cname', async function (req, res) {
         conn.close();
         let output = await runProcedure(queryResult.recordset[0], 'courseInformation', null);
         res.render('courseDetails', {data : output.table[0][0], instructor : instrQuery.recordset, enrolled : flag});
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/studentSubmitAssignments/:name', async function(req,res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try {
@@ -263,11 +288,14 @@ app.get('/studentSubmitAssignments/:name', async function(req,res){
         }
         conn.close();
         res.render('studentSubmitAssignments', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/studentAssignments/:name', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
@@ -285,14 +313,14 @@ app.get('/studentAssignments/:name', async function(req, res){
             list[key].deadline = date[2] + "/" + date[1] + "/" + date[0];
         }
         res.render('studentAssignments',{data: output.table[0]});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
-})
+});
   
 app.get('/studentViewAssignGrade/:name', async function(req, res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try {
@@ -307,26 +335,29 @@ app.get('/studentViewAssignGrade/:name', async function(req, res){
         }
         conn.close();
         res.render('studentviewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/assignContent', async function(req,res){
     if(req.session.iid && (req.session.type == 2)){
+        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try{
-            var studQuery = await request.query("select c.name from course c inner join studentTakeCourse s on c.id = s.cid");
+            var studQuery = await request.query("select DISTINCT c.name from course c inner join studentTakeCourse s on c.id = s.cid");
         } catch(err){
             console.log(err);
         }
         res.render('viewAssign', {student :studQuery.recordset});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
 });
 
 app.get('/viewGrade', async function(req, res){
+    req.session.touch();
     if(req.session.iid && (req.session.type == 2)){
         await conn.connect();
         var request = new mssql.Request(conn);
@@ -336,73 +367,72 @@ app.get('/viewGrade', async function(req, res){
             console.log(err);
         }
         res.render('viewGrades', {student :studQuery.recordset});
-        }
-    else{
-        res.redirect('/login')
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
-app.get('/instructorProfile',async function(req,res){
+app.get('/instructorProfile', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName="ViewInstructorProfile";
-    var news = {instrId : req.session.iid }
-    result = await runProcedure(news,procName)
-    res.render('instructorProfile',{result : result.table[0]})
-    }else{
-    res.redirect('/login')
+        req.session.touch;
+        conn.connect();
+        procName="ViewInstructorProfile";
+        var news = {instrId : req.session.iid }
+        result = await runProcedure(news,procName)
+        res.render('instructorProfile',{result : result.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.get('/viewAssigninst', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName="InstructorViewTeachingCourse";
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        req.session.touch;
+        conn.connect();
+        procName="InstructorViewTeachingCourse";
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        result1 = await runProcedure(enter,procName)
+        res.render('viewAssigninst',{result:"",result1:result1.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-    result1 = await runProcedure(enter,procName)
-    res.render('viewAssigninst',{result:"",result1:result1.table[0]})
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
-app.get('/IssueCertificate',async function(req,res){
+app.get('/IssueCertificate', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;    
-    conn.connect();
-    procName="InstructorViewTeachingCourse";
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        req.session.touch;    
+        conn.connect();
+        procName="InstructorViewTeachingCourse";
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        result = await runProcedure(enter,procName)
+        res.render('issueCertificate',{result:result.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-    result = await runProcedure(enter,procName)
-    res.render('issueCertificate',{result:result.table[0]})
-    }else{
-    res.redirect('/login')    
-    }
-})
+});
 
 app.get('/viewFeedback', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName="InstructorViewTeachingCourse";
-    var news = {instrId : req.session.iid }
-    result1 = await runProcedure(news,procName)
-    res.render('viewFeedback',{result:"",result1:result1.table[0]})
-    }else{
-    res.redirect('/login')
+        req.session.touch;
+        conn.connect();
+        procName="InstructorViewTeachingCourse";
+        var news = {instrId : req.session.iid }
+        result1 = await runProcedure(news,procName)
+        res.render('viewFeedback',{result:"",result1:result1.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
-app.get('/updateContent',async function(req,res){
+app.get('/updateContent', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
         req.session.touch;
         conn.connect();
@@ -410,12 +440,12 @@ app.get('/updateContent',async function(req,res){
         var news = {instrId : req.session.iid }
         result1 = await runProcedure(news,procName)
         res.render('updateContent',{result1:result1.table[0]})
-        }else{
-        res.redirect('/login')
-        }
-})
+    } else {
+        res.render('accessDenied');
+    }
+});
 
-app.get('/updateCourseDescription',async function(req,res){
+app.get('/updateCourseDescription', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
         req.session.touch;
         conn.connect();
@@ -423,11 +453,12 @@ app.get('/updateCourseDescription',async function(req,res){
         var news = {instrId : req.session.iid }
         result1 = await runProcedure(news,procName)
         res.render('courseDescription',{result1:result1.table[0]})
-        }else{
-        res.redirect('/login')
-        }
-})
-app.get('/addInstructor',async function(req,res){
+    } else {
+        res.render('accessDenied');
+    }
+});
+
+app.get('/addInstructor', async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
         req.session.touch;
         conn.connect();
@@ -435,18 +466,19 @@ app.get('/addInstructor',async function(req,res){
         var news = {instrId : req.session.iid }
         result1 = await runProcedure(news,procName)
         res.render('addinstructor',{result1:result1.table[0]})
-        }else{
-        res.redirect('/login')
-        }
-})
+    } else {
+        res.render('accessDenied');
+    }
+});
 
-app.get('/logout',function(req,res){
+app.get('/logout', function(req,res){
     req.session.destroy();
     res.redirect('/login');
-})
+});
 
 app.get('/promocodes', async function(req, res) {
-    if(req.session.iid) {
+    if(req.session.iid && req.session.type == 2) {
+        req.session.touch();
         req.body.sid = req.session.iid;
         let output = await runProcedure(req.body, 'viewPromocode', null);
         for(key in list = output.table[0]) {
@@ -457,9 +489,13 @@ app.get('/promocodes', async function(req, res) {
         }
         res.render('listPromocodes', {details : output.table[0]});
     } else {
-        res.redirect('/login');
+        res.render('accessDenied');
     }
 });
+
+app.get('*', function(req, res) {
+    res.render('notFound');
+})
 
 app.post('/register', function(req, res) {
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
@@ -469,209 +505,222 @@ app.post('/register', function(req, res) {
 });
 
 app.post('/enroll/:cid', function(req, res) {
-    req.body.sid = req.session.iid;
-    req.body.cid = req.params.cid
-    runProcedure(req.body, 'enrollInCourse');
-    res.redirect("/courses");
+    if(req.session.type == 2) {
+        req.body.sid = req.session.iid;
+        req.body.cid = req.params.cid
+        runProcedure(req.body, 'enrollInCourse');
+        res.redirect("/courses");
+    } else {
+        res.render('accessDenied');
+    }
 });
 
 app.post('/viewTheGrade/:cid', async function(req,res){
-    req.body.sid = req.session.iid;
-    req.body.cid = req.params.cid;
-    let q = req.body.assign.split("^");
-    delete req.body.assign;
-    req.body.assignType = q[0];
-    req.body.assignnumber = q[1];
-    let output = await runProcedure(req.body, 'viewAssignGrades', {"assignGrade" : mssql.Int});
-    res.render('viewAssignGrades', {data : output.output});
-})
+    if(req.session.type == 2) {
+        req.session.touch();
+        req.body.sid = req.session.iid;
+        req.body.cid = req.params.cid;
+        let q = req.body.assign.split("^");
+        delete req.body.assign;
+        req.body.assignType = q[0];
+        req.body.assignnumber = q[1];
+        let output = await runProcedure(req.body, 'viewAssignGrades', {"assignGrade" : mssql.Int});
+        res.render('viewAssignGrades', {data : output.output});
+    } else {
+        res.render('accessDenied');
+    }
+});
 
 app.post('/feedback/:cid', function(req, res){
-    req.body.sid = req.session.iid;
-    req.body.cid = req.params.cid;
-    runProcedure(req.body, 'addFeedback')
-    res.redirect('/addFeedback')
-})
+    if(req.session.type == 2) {
+        req.body.sid = req.session.iid;
+        req.body.cid = req.params.cid;
+        runProcedure(req.body, 'addFeedback')
+        res.redirect('/addFeedback')
+    } else {
+        res.render('accessDenied');
+    }
+});
 
 app.post('/submit/:cid', function(req, res){
-    req.body.sid = req.session.iid;
-    req.body.cid = req.params.cid;
-    /*for(i = 0; i<req.body.assign.length; i++){
-        if(req.body.assign.charAt[i].equals"^")
-    }*/
-    let q = req.body.assign.split("^");
-    delete req.body.assign;
-    req.body.assignType = q[0];
-    req.body.assignnumber = q[1];
-    runProcedure(req.body, 'submitAssign');
-    res.redirect('/submitAssign');
+    if(req.session.type == 2){
+        req.body.sid = req.session.iid;
+        req.body.cid = req.params.cid;
+        /*for(i = 0; i<req.body.assign.length; i++){
+            if(req.body.assign.charAt[i].equals"^")
+        }*/
+        let q = req.body.assign.split("^");
+        delete req.body.assign;
+        req.body.assignType = q[0];
+        req.body.assignnumber = q[1];
+        runProcedure(req.body, 'submitAssign');
+        res.redirect('/submitAssign');
+    } else {
+        res.render('accessDenied');
+    }
 });
 
 app.post('/feedback', function(req, res){
     if(req.session.iid && (req.session.type == 2)){
-    req.session.touch;
-    procName = "addFeedback";
-    let enter = req.body
-    enter.sid = req.session.iid
-    var procedure = [procName, null, false, true];
-    runProcedure(enter, procName);
-    res.redirect('/addFeedback');
-    }else{
-    res.redirect('/login')
+        procName = "addFeedback";
+        let enter = req.body
+        enter.sid = req.session.iid
+        runProcedure(enter, procName);
+        res.redirect('/addFeedback');
+    } else {
+        res.render('accessDenied');
     }
-})
+});
 
 app.post('/listcerti', async function(req, res){
-    procName = "viewCertificate";
-    let enter = req.body
-    enter.sid = req.session.iid
-    var procedure = [procName, null, false, true];
-    let output = await runProcedure(enter, "viewCertificate");
-    res.render('studentCertificate', {data : output.table[0][0]});
-})
+    if(req.session.type == 2) {
+        req.session.touch();
+        procName = "viewCertificate";
+        let enter = req.body
+        enter.sid = req.session.iid
+        var procedure = [procName, null, false, true];
+        let output = await runProcedure(enter, "viewCertificate");
+        res.render('studentCertificate', {data : output.table[0][0]});
+    } else {
+        res.render('accessDenied');
+    }
+});
 
 app.post('/login',function(req,res){
     conn.connect();
     runlogin(req,res);
-})
+});
 
 app.post('/addingCourse',function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    procName = "InstAddCourse";
-    var news = {instructorId : req.session.iid };
-    let enter = {
-        ...req.body,
-        ...news
+        procName = "InstAddCourse";
+        var news = {instructorId : req.session.iid };
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        res.redirect('/updateCourseDescription')
+    } else {
+        res.render('accessDenied');
     }
-    runProcedure(enter,procName)
-    res.redirect('/updateCourseDescription')
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post('/defineAssignment',function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    procName = "DefineAssignmentOfCourseOfCertianType";
-    var news = {instId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        procName = "DefineAssignmentOfCourseOfCertianType";
+        var news = {instId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        res.redirect('/instructor')
+    } else {
+        res.render('accessDenied');
     }
-    runProcedure(enter,procName)
-    res.redirect('/instructor')
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post('/viewAssigninst',async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName1="InstructorViewTeachingCourse";
-    result1 = await runProcedure({instrId : req.session.iid},procName1)
-    procName="InstructorViewAssignmentsStudents";
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        req.session.touch;
+        conn.connect();
+        procName1="InstructorViewTeachingCourse";
+        result1 = await runProcedure({instrId : req.session.iid},procName1)
+        procName="InstructorViewAssignmentsStudents";
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        result = await runProcedure(enter,procName)
+        res.render('viewAssigninst',{result : result.table[0],result1:result1.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-    result = await runProcedure(enter,procName)
-    res.render('viewAssigninst',{result : result.table[0],result1:result1.table[0]})
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post("/viewFeedback", async function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    conn.connect();
-    procName1="InstructorViewTeachingCourse";
-    result1 = await runProcedure({instrId : req.session.iid},procName1)
-    procName="ViewFeedbacksAddedByStudentsOnMyCourse";
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        req.session.touch;
+        conn.connect();
+        procName1="InstructorViewTeachingCourse";
+        result1 = await runProcedure({instrId : req.session.iid},procName1)
+        procName="ViewFeedbacksAddedByStudentsOnMyCourse";
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        result = await runProcedure(enter,procName)
+        res.render('viewFeedback',{result : result.table[0],result1:result1.table[0]})
+    } else {
+        res.render('accessDenied');
     }
-    result = await runProcedure(enter,procName)
-    res.render('viewFeedback',{result : result.table[0],result1:result1.table[0]})
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post("/issueCertificate",function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    procName = "InstructorIssueCertificateToStudent";
-    var news = {insId: req.session.iid, issueDate : new Date() }
-    let enter = {
-        ...req.body,
-        ...news
+        procName = "InstructorIssueCertificateToStudent";
+        var news = {insId: req.session.iid, issueDate : new Date() }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        res.redirect('/instructor')
+    } else {
+        res.render('accessDenied');
     }
-    runProcedure(enter,procName)
-    res.redirect('/instructor')
-    }else{
-    res.redirect('/login')
-    }
-})
+});
   
 app.post("/gradeAssignment",function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    procName = "InstructorgradeAssignmentOfAStudent";
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        procName = "InstructorgradeAssignmentOfAStudent";
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        res.redirect('/instructor')
+    } else {
+        res.render('accessDenied');
     }
-    runProcedure(enter,procName)
-    res.redirect('/instructor')
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post("/updateContent",function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    procName = "UpdateCourseContent"
-    var news = {instrId : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        procName = "UpdateCourseContent"
+        var news = {instrId : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        res.redirect('/instructor')
+    } else {
+        res.render('accessDenied');
     }
-    runProcedure(enter,procName)
-    res.redirect('/instructor')
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post("/addInstructor",function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-    req.session.touch;
-    procName = "AddAnotherInstructorToCourse"
-    var news = {adderIns : req.session.iid }
-    let enter = {
-        ...req.body,
-        ...news
+        procName = "AddAnotherInstructorToCourse"
+        var news = {adderIns : req.session.iid }
+        let enter = {
+            ...req.body,
+            ...news
+        }
+        runProcedure(enter,procName)
+        res.redirect('/instructor')
+    } else {
+        res.render('accessDenied');
     }
-    runProcedure(enter,procName)
-    res.redirect('/instructor')
-    }else{
-    res.redirect('/login')
-    }
-})
+});
 
 app.post("/addPhoneNumber", async function(req,res){
     if(req.session.iid){
-        req.session.touch;
         procName = "addMobile"
         var news = {ID : req.session.iid }
         let enter = {
@@ -685,14 +734,13 @@ app.post("/addPhoneNumber", async function(req,res){
         else if(req.session.type == 2){
             res.redirect('/profile')
         }
-        }else{
-            res.redirect('/login')
-        }
-})
+    } else {
+        res.render('accessDenied');
+    }
+});
 
 app.post("/removePhone", async function(req, res) {
     if(req.session.iid){
-        req.session.touch();
         await conn.connect();
         var request = new mssql.Request(conn);
         try {
@@ -704,13 +752,12 @@ app.post("/removePhone", async function(req, res) {
         }
         res.redirect('/profile');
     } else {
-        res.redirect('/login')
+        res.render('accessDenied');
     }
-})
+});
 
 app.post("/updateCourseDescription",function(req,res){
     if(req.session.iid && (req.session.type == 0)){
-        req.session.touch;
         procName = "UpdateCourseDescription"
         var news = {instrId : req.session.iid }
         let enter = {
@@ -720,13 +767,12 @@ app.post("/updateCourseDescription",function(req,res){
         runProcedure(enter,procName)
         res.redirect('/instructor')
     } else {
-        res.redirect('/login')
+        res.render('accessDenied');
     }
 })
 
 app.post("/addCreditCard", async function(req, res) {
-    if(req.session.iid) {
-        req.session.touch();
+    if(req.session.type == 2) {
         req.body.sid = req.session.iid;
         req.body.cardHolderName = req.body.name;
         delete req.body.name;
@@ -735,13 +781,12 @@ app.post("/addCreditCard", async function(req, res) {
         await runProcedure(req.body, 'addCreditCard', null);
         res.redirect('/profile');
     } else {
-        res.redirect('/login');
+        res.render('accessDenied');
     }
 });
 
 app.post("/removeCreditCard", async function(req, res) {
-    if(req.session.iid){
-        req.session.touch();
+    if(req.session.type == 2){
         await conn.connect();
         var request = new mssql.Request(conn);
         try {
@@ -753,47 +798,41 @@ app.post("/removeCreditCard", async function(req, res) {
         }
         res.redirect('/profile');
     } else {
-        res.redirect('/login')
+        res.render('accessDenied');
     }
-})
+});
 
-function runlogin(req,res){
-    conn.connect().then(() => {
+async function runlogin(req,res){
+    await conn.connect();
     var request = new mssql.Request(conn);
-    request.input('id',req.body.id)
+    var queryRequest = new mssql.Request(conn);
+    queryRequest.input('mail', req.body.id)
+    var queryResult = await queryRequest.query('select id from Users where email = @mail')
+    request.input('id', queryResult.recordset[0].id)
     request.input('password',req.body.password)
     request.output('success',mssql.Bit)
     request.output('type',mssql.Int)
-    request.execute("userLogin").then(function(done){
-            if(done.output.success == 1){
-                req.session.iid = req.body.id;
-                req.session.type = done.output.type;
-                if(done.output.type == 0){
-                    res.redirect('/instructor');
-                    conn.close();
-                }
-                else if(done.output.type == 1){
-                    res.redirect('/Admin');
-                    conn.close();
-                }
-                else if(done.output.type==2){
-                    res.redirect('/Student');
-                    conn.close();
-                }
-            }
-            else{
-                res.render('login',{error:"The username or password is incorrect"})
-                conn.close();
-            }
-        }).catch(function (err) {
-            console.log(err + " this is error1");
+    let done = await request.execute("userLogin");
+    if(done.output.success == 1){
+        req.session.iid = queryResult.recordset[0].id;
+        req.session.type = done.output.type;
+        if(done.output.type == 0){
+            res.redirect('/instructor');
             conn.close();
-        });
-    
-}).catch(function (err) {
-    console.log(err + " this is error2");
-    conn.close();
-});
+        }
+        else if(done.output.type == 1){
+            res.redirect('/Admin');
+            conn.close();
+        }
+        else if(done.output.type==2){
+            res.redirect('/Student');
+            conn.close();
+        }
+    }
+    else{
+        res.render('login',{error:"The username or password is incorrect"})
+        conn.close();
+    }
 }
 
 async function runProcedure(body, proc, expected_outputs) {
@@ -836,6 +875,5 @@ async function runProcedure(body, proc, expected_outputs) {
     }
 }
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+app.listen(process.env.PORT || 3000, 
+	() => console.log("Server is running..."));
