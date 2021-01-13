@@ -75,7 +75,7 @@ app.get('/addFeedback', async function(req, res){
         } catch(err){
             console.log(err);
         }
-        res.render('addFeedback', {student :studQuery.recordset});
+        res.render('AddFeedback', {student :studQuery.recordset});
     } else {
         res.render('accessDenied');
     }
@@ -153,7 +153,7 @@ app.get('/studentViewAssignGrade/:name', async function(req, res){
             console.log(err);
         }
         conn.close();
-        res.render('studentviewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+        res.render('studentViewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
     } else {
         res.render('accessDenied');
     }
@@ -334,7 +334,7 @@ app.get('/studentViewAssignGrade/:name', async function(req, res){
             console.log(err);
         }
         conn.close();
-        res.render('studentviewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
+        res.render('studentViewAssignGrade', { Assignment : assignQuery.recordset , assigned : flag , cid : queryResult.recordset[0].id});
     } else {
         res.render('accessDenied');
     }
