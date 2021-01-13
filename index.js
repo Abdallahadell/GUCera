@@ -5,7 +5,7 @@ const port = 3000;
 const path = require('path');
 const fs = require('fs');
 const session = require('express-session');
-const { request } = require('express');
+//const { request } = require('express');
 
 app.use(session({ secret: 'keyboard cat',resave:false,rolling:true,saveUninitialized:false, cookie: { maxAge: 180000}}));
 app.use(express.json());
@@ -846,14 +846,16 @@ app.get('/admin', async function (req, res){
         res.render('admin/landing');
     }
     else{
-        console.log('ewla3')
-        res.render('login')
+        res.redirect('/login')
     }
 })
 app.get('/admin/courses', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
         let output = await runProcedure(null, 'AdminViewAllCourses', null);
         res.render('admin/courses', {data : output.table[0]});
+    }
+    else{
+        res.redirect('/login');
     }
 })
 
@@ -871,6 +873,9 @@ app.get('/admin/courseDetails/:cname', async function (req, res){
         }
         let output = await runProcedure( {"courseId": query.recordset[0].id}, 'AdminViewCourseDetails', null);
         res.render('admin/courseDetails', {data : output.table[0][0]});
+    }
+    else{
+        res.redirect('/login');
     }
 })
 
@@ -891,11 +896,17 @@ app.post('/admin/accept/:cname', async function (req, res){
         await runProcedure(req.body, 'AdminAcceptRejectCourse');
         res.redirect('/admin');
     }
+    else{
+        res.redirect('/login');
+    }
 })
 
 app.get('/admin/add_promocode', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
         res.render('admin/addPromo');
+    }
+    else{
+        res.redirect('/login');
     }
 })
 
@@ -913,39 +924,64 @@ app.post('/admin/add_promocode', async function (req, res){
         }
         res.redirect('/admin');
     }
+    else{
+        res.redirect('/login');
+    }
 })
 
 app.get('/admin/view_students', async function (req, res){
     if(req.session.iid && req.session.type == 1){
         await conn.connect();
-        request = new mssql.Request(conn);
+        var request = new mssql.Request(conn);
         try{
-            let query = await request.query('select Users.id, firstName, lastName from Student INNER JOIN Users on Student.id = Users.id');
+            var query = await request.query('select Users.id, firstName, lastName from Student INNER JOIN Users on Student.id = Users.id');
+            console.log(query);
         }
         catch(err){
             console.log(err);
+            throw new Error(err);
         }
-        for(data in query.recordsets){
-            for(row in query.recordsets[data]){
-                console.log(query.recordset[data])
-                console.log("wut")
-            }
-        }
-        res.render('admin/viewStudents', {data: query.recordsets});
+        res.render('admin/viewStudents', {data: query.recordset});
+    }
+    else{
+        res.redirect('/login');
     }
 
 })
 
 app.get('/admin/student_details/:sid', async function (req, res){
     if(req.session.iid && req.session.type == 1){
-        let output = await runProcedure({"sid": req.params.sid}, AdminViewStudentProfile)
-        res.render('admin/studentDetails', {data: query.recordset[0]} );
+        let output = await runProcedure({"sid": req.params.sid}, "AdminViewStudentProfile")
+        output.table[0][0].id = req.params.sid;
+        res.render('admin/studentDetails', {data: output.table[0][0]} );
+    }
+    else{
+        res.redirect('/login');
     }
 })
 
-app.post('/admin/issue_code/:sid', async function(req, res){
+app.get("/admin/issue_promocode", async function(req, res){
     if(req.session.iid && req.session.type == 1){
-        
+        res.render('admin/issueForm', {error: ""});
+    }
+    else{
+        res.redirect('/login');
+    }
+})
+
+app.post("/admin/issue_promocode", async function(req, res){
+    if(req.session.iid && req.session.type == 1){
+        try{
+            let output = await runProcedure(req.body, "AdminIssuePromocodeToStudent");
+            res.redirect("/admin");
+        }
+        catch(err){
+            console.log(err)
+            res.render("admin/issueForm", {error: "Invalid code or student ID"});
+        }
+    }
+    else{
+        res.redirect('/login');
     }
 })
 

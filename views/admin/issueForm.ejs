@@ -31,19 +31,16 @@
 
 <body>
     <div class="container">
-        <h1>Create Promocode</h1>
+        <h1>Issue Promocode to Student</h1>
     </div>
     <div class="cont">
-        <form method='post' action='/admin/add_promocode'>
+        <form method='post' action='/admin/issue_promocode'>
             Code: <br>
-            <input type="text" id="firstName" name="code" maxlength="6" required> <br>
-            Issue Date : <br>
-            <input type="text" id="lastName" name="isuueDate" required> <br>
-            Expiry Date: <br>
-            <input type="text" id="password" name="expiryDate"  required> <br>
-            Discount: <br>
-            <input type="text" id="email" name="discount" maxlength="4" required> <br>
-            <input type="submit" id="simple_click" class="btn btn-secondary" value="Add Promocode"> <br>
+            <input type="text" id="firstName" name="pid" maxlength="6" required> <br>
+            ID of Student: <br>
+            <input type="number" id="lastName" min="1" name="sid" required> <br>
+            <br> <br> <p style="color: crimson; font-size: 15px; font-weight: 500;"><%=error%> </p>
+            <input type="submit" id="simple_click" class="btn btn-secondary" value="Issue Promocode"> <br>
         </form>
     </div>
 </body>
