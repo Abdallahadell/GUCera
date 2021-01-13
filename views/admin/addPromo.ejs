@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+        <style>
+            body{
+               background-image: url("background2.jpg");
+               background-repeat: no-repeat;
+               background-size: 150%;
+           }
+           h1 {
+                color: white;
+                text-align: center;
+                -webkit-text-stroke: 1px black;
+            }
+            .cont {
+                position:relative;
+                left:600px;
+                top:50px;
+                color: white;
+            }
+       </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Create Promocode</h1>
+    </div>
+    <div class="cont">
+        <form method='post' action='/admin/add_promocode'>
+            Code: <br>
+            <input type="text" id="firstName" name="code" maxlength="6" required> <br>
+            Issue Date : <br>
+            <input type="text" id="lastName" name="isuueDate" required> <br>
+            Expiry Date: <br>
+            <input type="text" id="password" name="expiryDate"  required> <br>
+            Discount: <br>
+            <input type="text" id="email" name="discount" maxlength="4" required> <br>
+            <input type="submit" id="simple_click" class="btn btn-secondary" value="Add Promocode"> <br>
+        </form>
+    </div>
+</body>
+
+</html>

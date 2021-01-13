@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a class="active" href="/admin">Home</a>
+        <a href="/admin/courses">See All Courses</a>
+        <a href="/admin/requested_courses">See Requested Courses</a>
+        <a href="/admin/view_students"> See All Students</a>
+        <a href="/admin/add_promocode">Create A Promocode</a>
+        <a href="/admin/issue_promocode">Issue A Promocode</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Log out</a>
+    </div>
+    <div class="container">
+        <h1>Course Details</h1>
+    </div>
+    <div class="table" style="padding-top: 20px;">
+        <table cellspacing=10px>
+          <% for(key in data) { %>
+            <tr>
+              <td><%=key%></td>
+              <td><%=data[key]%></td>
+            </tr>
+          <%}%>
+        </table>
+        <form action="/admin/accept/<%=data.name %>" method="POST">
+            <input type="submit" value="Accept" class="btn btn-secondary">
+          </form>
+    </div>
+</body>
+</html>
