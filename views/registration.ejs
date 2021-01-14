@@ -49,12 +49,13 @@
             <input type="radio" id="male" name="gender" value="0" required>
             <label for="male">Male</label><br>
             <input type="radio" id="female" name="gender" value="1" required>
-            <label for="female">Female</label><br> <br>
+            <label for="female">Female</label><br>
             Register as :
             <input type="radio" id="instructor" name="regType" value="false" required>
             <label for="instructor">Instructor</label>
             <input type="radio" id="student" name="regType" value="true" required>
             <label for="student">Student</label> <br>
+            <p style="color: red;"><%=error%></p>
             <input type="submit" id="simple_click" class="btn btn-secondary" value="Register"> <br>
         </form>
     </div>

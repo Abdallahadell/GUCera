@@ -37,7 +37,7 @@ app.get('/login', function(req, res) {
 });
 
 app.get('/registration', function(req, res) {
-    res.render('registration');
+    res.render('registration', {error : ""});
 });
 
 app.get('/student', function(req, res) {
@@ -493,11 +493,15 @@ app.get('/promocodes', async function(req, res) {
     }
 });
 
-app.post('/register', function(req, res) {
+app.post('/register', async function(req, res) {
     procName = (req.body.regType == 'true') ? "studentRegister": "InstructorRegister";
     delete req.body["regType"];
-    runProcedure(req.body, procName);
-    res.redirect('/login');
+    let output = await runProcedure(req.body, procName);
+    if (output.failure = 0) {
+        res.redirect('/login');
+    } else {
+        res.render('registration', {error : "This mail already exists."})
+    }
 });
 
 app.post('/enroll/:cid', function(req, res) {
