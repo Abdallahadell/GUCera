@@ -859,13 +859,14 @@ async function runProcedure(body, proc, expected_outputs) {
                 conn.close();
                 var result = {
                     table : recordSet.recordsets ,
-                    output : recordSet.output
+                    output : recordSet.output,
+                    failure: 0
                 }
                 return result;
                 
             } catch (error) {
                console.log(error);
-               return; 
+               return {failure: 1}; 
             }
         }
     }
@@ -958,7 +959,7 @@ app.post('/admin/accept/:cname', async function (req, res){
 
 app.get('/admin/add_promocode', async function (req, res){
     if(req.session.iid && req.session.type == 1) {
-        res.render('admin/addPromo');
+        res.render('admin/addPromo', {error:""});
     }
     else{
         res.redirect('/login');
@@ -972,12 +973,17 @@ app.post('/admin/add_promocode', async function (req, res){
         request = new mssql.Request(conn);
         req.body.adminId = req.session.iid
         try{
-            let output = await runProcedure(req.body, 'AdminCreatePromocode', null);
+            var output = await runProcedure(req.body, 'AdminCreatePromocode', null);
         }
         catch(err){
             console.log(err);
         }
-        res.redirect('/admin');
+        if(output.failure == 1){
+            res.render('admin/addPromo', {error: "Make sure the fields aren't empty and dates are formatted as DD/MM/YYYY"})
+        }
+        else{
+            res.redirect('/admin');
+        }
     }
     else{
         res.redirect('/login');
